@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process — Amoghya Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+body{overflow-x:hidden}
+#proc-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+#proc-scroll{height:900vh;position:relative;pointer-events:none}
+/* ── STAGE CONTENT OVERLAY ── */
+#proc-overlay{position:fixed;inset:0;z-index:8;display:flex;align-items:center;pointer-events:none}
+.proc-stage{position:absolute;left:72px;max-width:440px;opacity:0;transform:translateY(18px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.proc-stage.visible{opacity:1;transform:none;pointer-events:auto}
+.proc-stage-eye{font-size:9px;letter-spacing:.46em;text-transform:uppercase;color:rgba(240,235,225,.28);margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.proc-stage-eye::before{content:'';display:block;width:24px;height:1px;background:currentColor;opacity:.55}
+.proc-stage-concept{font-size:10px;letter-spacing:.44em;text-transform:uppercase;margin-bottom:16px}
+.proc-stage-title{font-family:'Syne',sans-serif;font-size:clamp(46px,5.5vw,80px);font-weight:800;line-height:.88;letter-spacing:-.03em;text-transform:uppercase;color:var(--fg);margin-bottom:18px}
+.proc-stage-title span{-webkit-text-stroke:1.5px;color:transparent}
+.proc-stage-hook{font-size:13px;color:var(--fg2);line-height:1.85;max-width:360px;margin-bottom:28px}
+.proc-explore-btn{display:inline-flex;align-items:center;gap:10px;font-size:9px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;padding:10px 22px;border:1px solid;border-radius:2px;background:transparent;cursor:pointer;transition:background .25s,gap .22s;font-family:'Space Grotesk',sans-serif}
+.proc-explore-btn:hover{gap:16px}
+.proc-explore-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+/* ── EXPAND PANELS ── */
+.proc-panel{position:fixed;top:0;right:0;bottom:0;width:52%;z-index:30;opacity:0;transform:translateX(100%);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1);pointer-events:none;overflow:hidden;display:flex;flex-direction:column;border-left:1px solid rgba(240,235,225,.07)}
+.proc-panel.open{opacity:1;transform:translateX(0);pointer-events:auto}
+.proc-panel-bg{position:absolute;inset:0;background:rgba(3,5,8,.9);backdrop-filter:blur(24px);z-index:-1}
+/* Sticky header strip — close button always visible */
+.proc-panel-header{flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding:22px 28px 16px;border-bottom:1px solid rgba(240,235,225,.06)}
+.proc-panel-close{display:inline-flex;align-items:center;gap:9px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif;font-weight:500;color:rgba(240,235,225,.45);background:transparent;border:1px solid rgba(240,235,225,.12);border-radius:2px;padding:8px 18px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.proc-panel-close:hover{color:var(--fg);border-color:rgba(240,235,225,.35);background:rgba(240,235,225,.04)}
+.proc-panel-close svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+/* Scrollable body */
+.proc-panel-body{flex:1;overflow-y:auto;padding:40px 60px 80px 56px}
+.proc-panel-num{font-size:9px;letter-spacing:.44em;text-transform:uppercase;color:rgba(240,235,225,.28);margin-bottom:12px}
+.proc-panel-concept{font-size:10px;letter-spacing:.44em;text-transform:uppercase;margin-bottom:20px}
+.proc-panel-heading{font-family:'Syne',sans-serif;font-size:clamp(28px,3.2vw,46px);font-weight:800;line-height:.9;letter-spacing:-.025em;text-transform:uppercase;color:var(--fg);margin-bottom:26px}
+.proc-panel-narrative{font-size:14px;color:var(--fg2);line-height:1.9;margin-bottom:34px;padding-left:18px;border-left:2px solid}
+.proc-panel-section{font-size:8px;letter-spacing:.4em;text-transform:uppercase;color:rgba(240,235,225,.28);margin-bottom:14px}
+.proc-panel-list{list-style:none;padding:0;margin:0 0 32px}
+.proc-panel-list li{font-size:12.5px;color:rgba(240,235,225,.6);padding:9px 0;border-bottom:1px solid rgba(240,235,225,.06);display:flex;align-items:baseline;gap:12px}
+.proc-panel-list li::before{content:'→';font-size:9px;opacity:.5;flex-shrink:0}
+.proc-panel-list li:hover{color:rgba(240,235,225,.88)}
+.proc-panel-outcome{padding:20px 22px;border:1px solid rgba(240,235,225,.08);border-radius:2px;margin-bottom:36px}
+.proc-panel-outcome-label{font-size:8px;letter-spacing:.36em;text-transform:uppercase;color:rgba(240,235,225,.28);margin-bottom:8px}
+.proc-panel-outcome-text{font-size:13px;color:var(--fg2);line-height:1.75}
+.proc-panel-cta{display:inline-flex;align-items:center;gap:10px;font-size:9px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;text-decoration:none;transition:gap .22s}
+.proc-panel-cta:hover{gap:16px}
+.proc-panel-cta svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+/* ── HUD ── */
+#proc-spine{position:fixed;left:0;top:0;bottom:0;width:3px;background:rgba(240,235,225,.04);z-index:20;pointer-events:none}
+#proc-spine-fill{position:absolute;top:0;left:0;right:0;height:0%;background:linear-gradient(to bottom,var(--gold),rgba(196,164,107,.3));border-radius:0 0 2px 2px}
+#proc-pill{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:20;font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:rgba(240,235,225,.3);padding:6px 20px;border:1px solid rgba(240,235,225,.08);border-radius:40px;backdrop-filter:blur(10px);white-space:nowrap;transition:color .5s,border-color .5s;pointer-events:none}
+#proc-dots{position:fixed;right:32px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:20}
+.proc-dot{width:3px;height:3px;border-radius:50%;background:rgba(240,235,225,.18);cursor:pointer;transition:background .3s,height .3s,border-radius .3s;position:relative}
+.proc-dot.active{background:var(--gold);height:14px;border-radius:2px}
+.proc-dot::after{content:attr(data-label);position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,235,225,.28);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.proc-dot:hover::after,.proc-dot.active::after{opacity:1}
+.proc-dot.active::after{color:var(--gold)}
+#proc-tl{position:fixed;bottom:0;left:0;right:0;height:2px;background:rgba(240,235,225,.04);z-index:20;pointer-events:none}
+#proc-tl-fill{height:100%;width:0%;background:linear-gradient(to right,var(--gold),rgba(196,164,107,.4))}
+/* ── FINAL SCENE ── */
+#proc-final{position:fixed;inset:0;z-index:12;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 1s cubic-bezier(.16,1,.3,1);text-align:center;padding:0 40px}
+#proc-final.show{opacity:1;pointer-events:auto}
+.pf-label{font-size:9px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0;transform:translateY(8px);transition:opacity .6s .3s,transform .6s .3s}
+#proc-final.show .pf-label{opacity:1;transform:none}
+.pf-title{font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,44px);font-weight:800;line-height:1.05;letter-spacing:-.02em;color:var(--fg);margin-bottom:14px;opacity:0;transform:translateY(16px);transition:opacity .7s .45s,transform .7s .45s;max-width:600px}
+#proc-final.show .pf-title{opacity:1;transform:none}
+.pf-sub{font-size:13px;color:var(--fg2);line-height:1.8;margin-bottom:44px;max-width:480px;opacity:0;transition:opacity .6s .6s}
+#proc-final.show .pf-sub{opacity:1}
+.pf-btns{display:flex;gap:16px;justify-content:center;opacity:0;transform:translateY(8px);transition:opacity .6s .75s,transform .6s .75s}
+#proc-final.show .pf-btns{opacity:1;transform:none}
+/* ── SCROLL HINT ── */
+.proc-hint{position:fixed;bottom:52px;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:rgba(240,235,225,.22);transition:opacity .5s;pointer-events:none}
+.proc-hint.hidden{opacity:0}
+.proc-hint-line{width:1px;height:44px;background:linear-gradient(to bottom,rgba(196,164,107,.5),transparent);animation:ph-grow 2s 1s ease-in-out infinite}
+@keyframes ph-grow{0%{transform:scaleY(0);transform-origin:top;opacity:0}30%{transform:scaleY(1);transform-origin:top;opacity:1}70%{transform:scaleY(1);transform-origin:bottom;opacity:1}100%{transform:scaleY(0);transform-origin:bottom;opacity:0}}@media (max-width: 900px) {
+  .proc-stage-title { font-size: clamp(32px, 8vw, 46px) !important; text-align: center; }
+  .proc-panel-heading { font-size: clamp(28px, 7vw, 40px) !important; }
+  .pf-title { font-size: clamp(24px, 7vw, 36px) !important; text-align: center; margin-left: auto; margin-right: auto; }
+  .proc-stage-hook, .pf-sub { text-align: center; margin-left: auto; margin-right: auto; }
+  .proc-stage-eye, .proc-stage-concept { justify-content: center; }
+  .proc-stage-inner { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+}
+</style>
+</head>
+<body>
+<div id="page-veil"></div>
+<div id="cur-label"></div>
+<div id="scroll-progress"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="scroll-trace"></div>
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Amogh<b>ya</b></a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="process.html" class="active">Process</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Start a Project</a>
+</nav>
+<canvas id="proc-canvas"></canvas>
+<div id="proc-spine"><div id="proc-spine-fill"></div></div>
+<div id="proc-pill">01 &mdash; Signal</div>
+<div id="proc-dots">
+  <div class="proc-dot active" data-i="0" data-label="Signal"></div>
+  <div class="proc-dot" data-i="1" data-label="Framework"></div>
+  <div class="proc-dot" data-i="2" data-label="Interface"></div>
+  <div class="proc-dot" data-i="3" data-label="System"></div>
+  <div class="proc-dot" data-i="4" data-label="Validation"></div>
+  <div class="proc-dot" data-i="5" data-label="Ecosystem"></div>
+</div>
+<div id="proc-tl"><div id="proc-tl-fill"></div></div>
+<div class="proc-hint" id="proc-hint"><div class="proc-hint-line"></div>Scroll to begin</div>
+<!-- STAGE OVERLAYS -->
+<div id="proc-overlay">
+  <div class="proc-stage visible" id="ps0">
+    <div class="proc-stage-eye">Chapter 01</div>
+    <div class="proc-stage-concept" style="color:#22d3ee">Signal</div>
+    <h2 class="proc-stage-title">Discovery<br><span style="-webkit-text-stroke-color:rgba(34,211,238,.32)">Detected</span></h2>
+    <p class="proc-stage-hook">Before we create anything, we uncover the forces that shape your business. Scattered particles find each other. A signal emerges.</p>
+    <button class="proc-explore-btn" style="border-color:rgba(34,211,238,.3);color:#22d3ee" onclick="openPanel(0)">Explore this chapter <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+  <div class="proc-stage" id="ps1">
+    <div class="proc-stage-eye">Chapter 02</div>
+    <div class="proc-stage-concept" style="color:#a855f7">Framework</div>
+    <h2 class="proc-stage-title">Blueprint<br><span style="-webkit-text-stroke-color:rgba(168,85,247,.32)">Emerges</span></h2>
+    <p class="proc-stage-hook">Insights gain structure. Architecture rises from the signal. The roadmap assembles itself, pathway by pathway.</p>
+    <button class="proc-explore-btn" style="border-color:rgba(168,85,247,.3);color:#a855f7" onclick="openPanel(1)">Explore this chapter <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+  <div class="proc-stage" id="ps2">
+    <div class="proc-stage-eye">Chapter 03</div>
+    <div class="proc-stage-concept" style="color:#f97316">Interface</div>
+    <h2 class="proc-stage-title">Form Meets<br><span style="-webkit-text-stroke-color:rgba(249,115,22,.32)">Function</span></h2>
+    <p class="proc-stage-hook">The blueprint gains personality. Colour fills the wireframes. Interactions come alive. Logic becomes emotion.</p>
+    <button class="proc-explore-btn" style="border-color:rgba(249,115,22,.3);color:#f97316" onclick="openPanel(2)">Explore this chapter <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+  <div class="proc-stage" id="ps3">
+    <div class="proc-stage-eye">Chapter 04</div>
+    <div class="proc-stage-concept" style="color:#84cc16">System</div>
+    <h2 class="proc-stage-title">Engine<br><span style="-webkit-text-stroke-color:rgba(132,204,22,.32)">Awakens</span></h2>
+    <p class="proc-stage-hook">Vision becomes reality. The digital assembly line activates. Systems connect, code flows, infrastructure grows.</p>
+    <button class="proc-explore-btn" style="border-color:rgba(132,204,22,.3);color:#84cc16" onclick="openPanel(3)">Explore this chapter <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+  <div class="proc-stage" id="ps4">
+    <div class="proc-stage-eye">Chapter 05</div>
+    <div class="proc-stage-concept" style="color:#c4a46b">Validation</div>
+    <h2 class="proc-stage-title">Tested Beyond<br><span style="-webkit-text-stroke-color:rgba(196,164,107,.32)">Expectation</span></h2>
+    <p class="proc-stage-hook">The system enters the testing chamber. Scanning beams pass through every layer. Flaws dissolve. Confidence crystallises.</p>
+    <button class="proc-explore-btn" style="border-color:rgba(196,164,107,.3);color:#c4a46b" onclick="openPanel(4)">Explore this chapter <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+  <div class="proc-stage" id="ps5">
+    <div class="proc-stage-eye">Chapter 06</div>
+    <div class="proc-stage-concept" style="color:#38bdf8">Ecosystem</div>
+    <h2 class="proc-stage-title">Into<br><span style="-webkit-text-stroke-color:rgba(56,189,248,.32)">The World</span></h2>
+    <p class="proc-stage-hook">Launch is the beginning, not the end. The ecosystem expands. Users arrive. Traffic flows. Growth begins its orbit.</p>
+    <button class="proc-explore-btn" style="border-color:rgba(56,189,248,.3);color:#38bdf8" onclick="openPanel(5)">Explore this chapter <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+</div>
+<!-- EXPAND PANELS -->
+<div id="proc-panel-0" class="proc-panel">
+  <div class="proc-panel-bg"></div>
+  <div class="proc-panel-header">
+    <button class="proc-panel-close" onclick="closePanel(0)">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="proc-panel-body">
+    <div class="proc-panel-num">Chapter 01</div>
+    <div class="proc-panel-concept" style="color:#22d3ee">Signal Detected</div>
+    <h3 class="proc-panel-heading">Discovery</h3>
+    <p class="proc-panel-narrative" style="border-color:#22d3ee">Every successful product begins long before the first design or line of code. It begins with understanding. Before we create anything, we uncover the forces that shape your business, your audience, and your goals.</p>
+    <div class="proc-panel-section">What happens</div>
+    <ul class="proc-panel-list">
+      <li>Stakeholder workshops &amp; alignment sessions</li>
+      <li>Business analysis &amp; goal definition</li>
+      <li>Market &amp; competitor research</li>
+      <li>User persona development</li>
+      <li>Opportunity mapping</li>
+      <li>KPI &amp; success metric definition</li>
+    </ul>
+    <div class="proc-panel-outcome">
+      <div class="proc-panel-outcome-label">Outcome</div>
+      <div class="proc-panel-outcome-text">Uncertainty becomes clarity. We know who we're building for, why it matters, and what success will look like.</div>
+    </div>
+    <a href="contact.html" class="proc-panel-cta" style="color:#22d3ee">Start your discovery <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<div id="proc-panel-1" class="proc-panel">
+  <div class="proc-panel-bg"></div>
+  <div class="proc-panel-header">
+    <button class="proc-panel-close" onclick="closePanel(1)">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="proc-panel-body">
+    <div class="proc-panel-num">Chapter 02</div>
+    <div class="proc-panel-concept" style="color:#a855f7">The Blueprint Emerges</div>
+    <h3 class="proc-panel-heading">Strategy</h3>
+    <p class="proc-panel-narrative" style="border-color:#a855f7">Ideas gain power when they are structured. Strategy transforms insights into a plan that aligns technology, design, and business objectives into a single coherent vision.</p>
+    <div class="proc-panel-section">What happens</div>
+    <ul class="proc-panel-list">
+      <li>Information architecture &amp; content mapping</li>
+      <li>User journey mapping</li>
+      <li>Technical planning &amp; stack selection</li>
+      <li>API &amp; system architecture</li>
+      <li>Design system foundations</li>
+      <li>Sprint roadmap creation</li>
+    </ul>
+    <div class="proc-panel-outcome">
+      <div class="proc-panel-outcome-label">Outcome</div>
+      <div class="proc-panel-outcome-text">Every decision now has a purpose. The roadmap is defined, risks are reduced, and the foundation is ready for execution.</div>
+    </div>
+    <a href="contact.html" class="proc-panel-cta" style="color:#a855f7">Build your blueprint <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<div id="proc-panel-2" class="proc-panel">
+  <div class="proc-panel-bg"></div>
+  <div class="proc-panel-header">
+    <button class="proc-panel-close" onclick="closePanel(2)">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="proc-panel-body">
+    <div class="proc-panel-num">Chapter 03</div>
+    <div class="proc-panel-concept" style="color:#f97316">Form Meets Function</div>
+    <h3 class="proc-panel-heading">Design</h3>
+    <p class="proc-panel-narrative" style="border-color:#f97316">Design is where logic becomes emotion. Every interaction, transition, and visual element is crafted to create experiences that feel intuitive, memorable, and effortless.</p>
+    <div class="proc-panel-section">What happens</div>
+    <ul class="proc-panel-list">
+      <li>Wireframing &amp; user flow diagrams</li>
+      <li>High-fidelity interface design</li>
+      <li>Interactive Figma prototyping</li>
+      <li>Motion &amp; interaction design</li>
+      <li>Accessibility review (WCAG)</li>
+      <li>User experience refinement</li>
+    </ul>
+    <div class="proc-panel-outcome">
+      <div class="proc-panel-outcome-label">Outcome</div>
+      <div class="proc-panel-outcome-text">A complete visual and interactive experience that users can explore before development begins.</div>
+    </div>
+    <a href="contact.html" class="proc-panel-cta" style="color:#f97316">Design your product <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<div id="proc-panel-3" class="proc-panel">
+  <div class="proc-panel-bg"></div>
+  <div class="proc-panel-header">
+    <button class="proc-panel-close" onclick="closePanel(3)">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="proc-panel-body">
+    <div class="proc-panel-num">Chapter 04</div>
+    <div class="proc-panel-concept" style="color:#84cc16">The Engine Awakens</div>
+    <h3 class="proc-panel-heading">Build</h3>
+    <p class="proc-panel-narrative" style="border-color:#84cc16">This is where vision becomes reality. Every component is engineered with scalability, performance, and maintainability in mind, ensuring the product is built for both today and tomorrow.</p>
+    <div class="proc-panel-section">What happens</div>
+    <ul class="proc-panel-list">
+      <li>Frontend development (React, Next.js)</li>
+      <li>Backend architecture &amp; APIs</li>
+      <li>Database engineering</li>
+      <li>CMS implementation</li>
+      <li>Third-party integrations</li>
+      <li>Performance optimisation</li>
+    </ul>
+    <div class="proc-panel-outcome">
+      <div class="proc-panel-outcome-label">Outcome</div>
+      <div class="proc-panel-outcome-text">A fully functional digital product engineered for speed, reliability, and future growth.</div>
+    </div>
+    <a href="contact.html" class="proc-panel-cta" style="color:#84cc16">Start building <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<div id="proc-panel-4" class="proc-panel">
+  <div class="proc-panel-bg"></div>
+  <div class="proc-panel-header">
+    <button class="proc-panel-close" onclick="closePanel(4)">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="proc-panel-body">
+    <div class="proc-panel-num">Chapter 05</div>
+    <div class="proc-panel-concept" style="color:#c4a46b">Tested Beyond Expectations</div>
+    <h3 class="proc-panel-heading">Quality</h3>
+    <p class="proc-panel-narrative" style="border-color:#c4a46b">Excellence is not assumed &mdash; it is verified. Every feature, workflow, and interaction is challenged under real-world conditions to ensure reliability at every level.</p>
+    <div class="proc-panel-section">What happens</div>
+    <ul class="proc-panel-list">
+      <li>Functional &amp; regression testing</li>
+      <li>Cross-device &amp; browser validation</li>
+      <li>Security auditing</li>
+      <li>Load &amp; performance testing</li>
+      <li>User acceptance testing (UAT)</li>
+      <li>Final QA sign-off</li>
+    </ul>
+    <div class="proc-panel-outcome">
+      <div class="proc-panel-outcome-label">Outcome</div>
+      <div class="proc-panel-outcome-text">Confidence. Every release is validated, refined, and prepared for launch without compromise.</div>
+    </div>
+    <a href="contact.html" class="proc-panel-cta" style="color:#c4a46b">Ensure quality <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<div id="proc-panel-5" class="proc-panel">
+  <div class="proc-panel-bg"></div>
+  <div class="proc-panel-header">
+    <button class="proc-panel-close" onclick="closePanel(5)">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="proc-panel-body">
+    <div class="proc-panel-num">Chapter 06</div>
+    <div class="proc-panel-concept" style="color:#38bdf8">Into The World</div>
+    <h3 class="proc-panel-heading">Launch</h3>
+    <p class="proc-panel-narrative" style="border-color:#38bdf8">Launch is not the finish line. It is the beginning of a product's life in the real world. Every deployment is supported by monitoring, optimisation, and a long-term growth strategy.</p>
+    <div class="proc-panel-section">What happens</div>
+    <ul class="proc-panel-list">
+      <li>Production deployment</li>
+      <li>Analytics &amp; tracking setup</li>
+      <li>SEO implementation</li>
+      <li>Team onboarding &amp; training</li>
+      <li>Monitoring systems activation</li>
+      <li>Growth roadmap planning</li>
+    </ul>
+    <div class="proc-panel-outcome">
+      <div class="proc-panel-outcome-label">Outcome</div>
+      <div class="proc-panel-outcome-text">A successful launch backed by data, insight, and a clear path for continuous evolution.</div>
+    </div>
+    <a href="contact.html" class="proc-panel-cta" style="color:#38bdf8">Plan your launch <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<!-- FINAL SCENE -->
+<div id="proc-final">
+  <div class="pf-label">Signal &nbsp;&middot;&nbsp; Blueprint &nbsp;&middot;&nbsp; Interface &nbsp;&middot;&nbsp; System &nbsp;&middot;&nbsp; Validation &nbsp;&middot;&nbsp; Ecosystem</div>
+  <h2 class="pf-title">Every great product begins with a conversation.</h2>
+  <p class="pf-sub">Let's build the next chapter together. From the first signal to a living ecosystem &mdash; we'll be there for every step.</p>
+  <div class="pf-btns">
+    <a href="contact.html" class="btn-pri" data-cursor-label="Let's Build">Start a Project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a href="contact.html" class="btn-out">Schedule a Call</a>
+  </div>
+</div>
+<nav class="pg-nav">
+  <a href="work.html" class="pg-arrow prev"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Work</a>
+  <a href="contact.html" class="pg-arrow next">Contact<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+</nav>
+<div id="proc-scroll"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="main.js"></script>
+<script>
+(function(){
+'use strict';
+if(typeof THREE==='undefined')return;
+var STAGES=[
+  {num:'01',concept:'Signal',    color:0x22d3ee,fog:0x010c12,cam:{x:0,   y:0,   z:14, rx:0,    ry:0}},
+  {num:'02',concept:'Framework', color:0xa855f7,fog:0x060010,cam:{x:0.5, y:0.5, z:11, rx:-0.05,ry:0.08}},
+  {num:'03',concept:'Interface', color:0xf97316,fog:0x0e0200,cam:{x:0,   y:0,   z:12, rx:0.04, ry:0}},
+  {num:'04',concept:'System',    color:0x84cc16,fog:0x030600,cam:{x:0.5, y:0,   z:11, rx:0,    ry:-0.06}},
+  {num:'05',concept:'Validation',color:0xc4a46b,fog:0x080500,cam:{x:0,   y:0.5, z:13, rx:-0.04,ry:0}},
+  {num:'06',concept:'Ecosystem', color:0x38bdf8,fog:0x010610,cam:{x:0,   y:0,   z:16, rx:0,    ry:0}}
+];
+var N=STAGES.length;
+var sColors=['#22d3ee','#a855f7','#f97316','#84cc16','#c4a46b','#38bdf8'];
+
+var canvas=document.getElementById('proc-canvas');
+var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setClearColor(0x030508,1);
+var scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x030508,0.04);
+var camera=new THREE.PerspectiveCamera(58,window.innerWidth/window.innerHeight,0.1,300);
+camera.position.set(0,0,14);
+scene.add(new THREE.AmbientLight(0x08080e,1));
+var kl=new THREE.PointLight(0x22d3ee,3,100);kl.position.set(0,6,4);scene.add(kl);
+
+function lm(c,o){return new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o});}
+function mm(c,o){return new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o});}
+
+/* ── STAGE 0: SIGNAL ── Particle field + connections + core */
+function buildSignal(){
+  var g=new THREE.Group(),c=0x22d3ee;
+  var count=280,sp=new Float32Array(count*3);
+  for(var i=0;i<count;i++){
+    var th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=4+Math.random()*6;
+    sp[i*3]=r*Math.sin(ph)*Math.cos(th);sp[i*3+1]=r*Math.sin(ph)*Math.sin(th)*0.7;sp[i*3+2]=r*Math.cos(ph);
+  }
+  var ptGeo=new THREE.BufferGeometry();ptGeo.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  g.add(new THREE.Points(ptGeo,new THREE.PointsMaterial({color:c,size:.07,transparent:true,opacity:.75})));
+  /* pre-computed connections */
+  var lines=[];
+  for(var i=0;i<count;i++)for(var j=i+1;j<count;j++){
+    var dx=sp[i*3]-sp[j*3],dy=sp[i*3+1]-sp[j*3+1],dz=sp[i*3+2]-sp[j*3+2];
+    if(dx*dx+dy*dy+dz*dz<6.5&&lines.length<600){
+      lines.push(sp[i*3],sp[i*3+1],sp[i*3+2],sp[j*3],sp[j*3+1],sp[j*3+2]);
+    }
+  }
+  var lGeo=new THREE.BufferGeometry();lGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(lines),3));
+  var connMat=lm(c,.12);g.userData.connMat=connMat;
+  g.add(new THREE.LineSegments(lGeo,connMat));
+  /* core */
+  var core=new THREE.Mesh(new THREE.SphereGeometry(.55,24,24),mm(c,.85));
+  core.userData.pulse=true;g.add(core);
+  /* outer ring */
+  var ring=new THREE.Mesh(new THREE.TorusGeometry(1.1,.03,8,80),mm(c,.45));
+  ring.rotation.x=Math.PI/2;ring.userData.spinSpeed=.012;ring.userData.spinAxis='y';g.add(ring);
+  /* second ring */
+  var ring2=new THREE.Mesh(new THREE.TorusGeometry(1.6,.02,6,80),mm(c,.25));
+  ring2.rotation.set(.6,0,0);ring2.userData.spinSpeed=-.008;ring2.userData.spinAxis='x';g.add(ring2);
+  return g;
+}
+
+/* ── STAGE 1: FRAMEWORK ── Wireframe cube + blueprints */
+function buildFramework(){
+  var g=new THREE.Group(),c=0xa855f7;
+  var cubeGeo=new THREE.BoxGeometry(4.5,4.5,4.5);
+  var cube=new THREE.LineSegments(new THREE.EdgesGeometry(cubeGeo),lm(c,.55));
+  cube.userData.spinSpeed=.006;cube.userData.spinAxis='y';g.add(cube);cubeGeo.dispose();
+  /* inner cube */
+  var iGeo=new THREE.BoxGeometry(2.8,2.8,2.8);
+  var inner=new THREE.LineSegments(new THREE.EdgesGeometry(iGeo),lm(c,.28));
+  inner.userData.spinSpeed=-.009;inner.userData.spinAxis='y';g.add(inner);iGeo.dispose();
+  /* floating blueprint planes */
+  [[-5,1.5,-3,.1,.3],[5,-1,-2,-.08,-.28],[0,4,-4,-.1,.05],[-4.5,-2,-2,.2,-.15],[5.5,2.5,-3,0,.2]].forEach(function(d){
+    var geo=new THREE.PlaneGeometry(3+Math.random()*1.5,2+Math.random());
+    var pg=new THREE.Group();
+    pg.add(new THREE.Mesh(geo,mm(c,.04)));pg.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),lm(c,.35)));
+    pg.position.set(d[0],d[1],d[2]);pg.rotation.set(d[3],d[4],0);
+    pg.userData.floatAmp=.003;pg.userData.floatFreq=.3+Math.random()*.2;pg.userData.floatPhase=Math.random()*Math.PI*2;
+    g.add(pg);geo.dispose();
+  });
+  /* grid floor */
+  var gm=lm(c,.08);
+  for(var i=-5;i<=5;i++){
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-10,-3.5,i*1.4-4),new THREE.Vector3(10,-3.5,i*1.4-4)]),gm.clone()));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i*2,-3.5,-10),new THREE.Vector3(i*2,-3.5,6)]),gm.clone()));
+  }
+  g.add(new THREE.Points(makePtsSphere(500,10,c,.55),new THREE.PointsMaterial({color:c,size:.05,transparent:true,opacity:.55})));
+  return g;
+}
+
+/* ── STAGE 2: INTERFACE ── Crystal + floating panels */
+function buildInterface(){
+  var g=new THREE.Group(),c=0xf97316;
+  /* large crystal */
+  var icoGeo=new THREE.IcosahedronGeometry(3.2,1);
+  var crystal=new THREE.LineSegments(new THREE.EdgesGeometry(icoGeo),lm(c,.6));
+  crystal.userData.spinSpeed=.005;crystal.userData.spinAxis='y';g.add(crystal);icoGeo.dispose();
+  /* inner solid core */
+  var innerGeo=new THREE.IcosahedronGeometry(1.6,0);
+  g.add(new THREE.Mesh(innerGeo,mm(c,.15)));innerGeo.dispose();
+  /* floating screen fragments */
+  var fm=lm(c,.38);
+  for(var i=0;i<12;i++){
+    var s=.6+Math.random()*1.2,geo=new THREE.PlaneGeometry(s,s*.65);
+    var fr=new THREE.LineSegments(new THREE.EdgesGeometry(geo),fm.clone());
+    var r=5+Math.random()*3,a=(i/12)*Math.PI*2;
+    fr.position.set(Math.cos(a)*r,(Math.random()-.5)*4,Math.sin(a)*r-2);
+    fr.rotation.y=a;fr.userData.floatAmp=.004;fr.userData.floatFreq=.35;fr.userData.floatPhase=Math.random()*Math.PI*2;
+    g.add(fr);geo.dispose();
+  }
+  g.add(new THREE.Points(makePtsSphere(600,10,c,.55),new THREE.PointsMaterial({color:c,size:.05,transparent:true,opacity:.6})));
+  return g;
+}
+
+/* ── STAGE 3: SYSTEM ── Mechanical engine */
+function buildSystem(){
+  var g=new THREE.Group(),c=0x84cc16;
+  /* torus knot engine */
+  var tkGeo=new THREE.TorusKnotGeometry(2.4,.28,120,12,2,3);
+  var engine=new THREE.LineSegments(new THREE.EdgesGeometry(tkGeo),lm(c,.65));
+  engine.userData.spinSpeed=.006;engine.userData.spinAxis='y';g.add(engine);tkGeo.dispose();
+  /* outer rings */
+  [[4,.05,Math.PI/2,0,.01],[5.5,.04,Math.PI/2+.7,.2,-.007],[3,.06,.3,.5,.009]].forEach(function(d){
+    var r=new THREE.Mesh(new THREE.TorusGeometry(d[0],d[1],6,80),mm(c,d[4]>0?.38:.32));
+    r.rotation.set(d[2],d[3],0);r.userData.spinSpeed=d[4];r.userData.spinAxis='z';g.add(r);
+  });
+  /* data stream lines */
+  var sm=lm(c,.3);
+  for(var i=0;i<20;i++){
+    var x=(Math.random()-.5)*16,z=(Math.random()-.5)*12-3;
+    var pts=[new THREE.Vector3(x,-6,z),new THREE.Vector3(x+(Math.random()-.5)*2,6+Math.random()*4,z+(Math.random()-.5)*2)];
+    var ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),sm.clone());
+    ln.material.opacity=.1+Math.random()*.3;g.add(ln);
+  }
+  g.add(new THREE.Points(makePtsSphere(700,10,c,.6),new THREE.PointsMaterial({color:c,size:.048,transparent:true,opacity:.62})));
+  return g;
+}
+
+/* ── STAGE 4: VALIDATION ── Shield + scanning rings */
+function buildValidation(){
+  var g=new THREE.Group(),c=0xc4a46b;
+  /* shield approximated with large custom plane path group */
+  /* Use torus rings and the shield icon we already have works well */
+  /* Outer dashed ring */
+  g.add(new THREE.Mesh(new THREE.TorusGeometry(5.5,.025,6,120),mm(c,.18)));
+  /* Shield body: two nested TorusGeometry create the feel */
+  var shGeo=new THREE.IcosahedronGeometry(2.8,0);/* Pentagon-ish */
+  var shield=new THREE.LineSegments(new THREE.EdgesGeometry(shGeo),lm(c,.55));
+  shield.userData.spinSpeed=.004;shield.userData.spinAxis='y';g.add(shield);shGeo.dispose();
+  /* scanning rings */
+  [3.5,4.5,5.5].forEach(function(R){
+    var ring=new THREE.Mesh(new THREE.TorusGeometry(R,.03,6,100),mm(c,.3));
+    ring.userData.spinSpeed=.012;ring.userData.spinAxis='z';ring.userData.scanRing=true;g.add(ring);
+  });
+  /* checkmark wires */
+  var pts=[new THREE.Vector3(-1.4,-.2,0),new THREE.Vector3(-.3,.9,0),new THREE.Vector3(1.6,-1,0)];
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),lm(c,.75)));
+  /* core */
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(.45,16,16),mm(c,.75)));
+  g.add(new THREE.Points(makePtsSphere(500,10,c,.55),new THREE.PointsMaterial({color:c,size:.055,transparent:true,opacity:.6})));
+  return g;
+}
+
+/* ── STAGE 5: ECOSYSTEM ── Planet + orbits */
+function buildEcosystem(){
+  var g=new THREE.Group(),c=0x38bdf8;
+  /* planet */
+  var planet=new THREE.Mesh(new THREE.SphereGeometry(2.5,32,32),new THREE.MeshBasicMaterial({color:c,wireframe:true,transparent:true,opacity:.35}));
+  planet.userData.spinSpeed=.006;planet.userData.spinAxis='y';g.add(planet);
+  /* solid inner */
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(1.6,16,16),mm(c,.18)));
+  /* orbital rings */
+  [[4,.06,Math.PI/2,0,.007],[5.5,.04,Math.PI/2+.8,.3,-.005],[7,.035,-.4,.6,.003],[3,.065,.2,.9,-.008]].forEach(function(d){
+    var t=new THREE.Mesh(new THREE.TorusGeometry(d[0],d[1],6,80),mm(c,.42));
+    t.rotation.set(d[2],d[3],0);t.userData.spinSpeed=d[4];t.userData.spinAxis='z';g.add(t);
+  });
+  /* all-color satellite dots — the assembled ecosystem */
+  [0x22d3ee,0xa855f7,0xf97316,0x84cc16,0xc4a46b,0x38bdf8].forEach(function(col,i){
+    var a=(i/6)*Math.PI*2,r=8+Math.random()*2;
+    var dot=new THREE.Mesh(new THREE.SphereGeometry(.12,8,8),mm(col,.9));
+    dot.position.set(Math.cos(a)*r,Math.sin(a*.5)*2,Math.sin(a)*r);
+    dot.userData.orbitR=r;dot.userData.orbitSpeed=.004+Math.random()*.003;dot.userData.orbitPhase=a;dot.userData.isSat=true;
+    g.add(dot);
+  });
+  g.add(new THREE.Points(makePtsSphere(600,12,c,.6),new THREE.PointsMaterial({color:c,size:.055,transparent:true,opacity:.65})));
+  return g;
+}
+
+/* ── FINAL ASSEMBLY GROUP ── All 6 in orbit */
+function buildAssembly(){
+  var g=new THREE.Group();
+  /* central core */
+  var core=new THREE.Mesh(new THREE.SphereGeometry(.6,20,20),mm(0xffffff,.7));
+  core.userData.pulse=true;g.add(core);
+  /* mini versions of each stage in orbit */
+  var orbitColors=[0x22d3ee,0xa855f7,0xf97316,0x84cc16,0xc4a46b,0x38bdf8];
+  orbitColors.forEach(function(c,i){
+    var a=(i/6)*Math.PI*2,r=5;
+    var mini=new THREE.Mesh(new THREE.SphereGeometry(.35,12,12),mm(c,.8));
+    mini.position.set(Math.cos(a)*r,Math.sin(i*.5)*.8,Math.sin(a)*r);
+    mini.userData.orbitR=r;mini.userData.orbitSpeed=.008;mini.userData.orbitPhase=a;mini.userData.orbitY=Math.sin(i*.5)*.8;mini.userData.isSat=true;
+    /* ring around each mini */
+    var ring=new THREE.Mesh(new THREE.TorusGeometry(.55,.02,6,40),mm(c,.5));
+    ring.position.copy(mini.position);ring.userData.spinSpeed=.02;ring.userData.spinAxis='y';
+    g.add(mini);g.add(ring);
+  });
+  return g;
+}
+
+function makePtsSphere(count,radius,c,op){
+  var pos=new Float32Array(count*3);
+  for(var i=0;i<count;i++){
+    var th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=(radius*.6)+Math.random()*(radius*.4);
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th);pos[i*3+1]=r*Math.sin(ph)*Math.sin(th)*.7;pos[i*3+2]=r*Math.cos(ph);
+  }
+  var geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));return geo;
+}
+
+/* Build all groups */
+var grps=[buildSignal(),buildFramework(),buildInterface(),buildSystem(),buildValidation(),buildEcosystem()];
+var asmGrp=buildAssembly();
+grps.forEach(function(g,i){g.visible=(i===0);scene.add(g);});
+asmGrp.visible=false;scene.add(asmGrp);
+
+/* Cache materials */
+var grpMats=grps.map(function(grp){
+  var m=[];grp.traverse(function(o){
+    var arr=Array.isArray(o.material)?o.material:(o.material?[o.material]:[]);
+    arr.forEach(function(mat){mat.userData.base=mat.opacity;m.push(mat);});
+  });return m;
+});
+function setOp(i,op){grpMats[i].forEach(function(m){m.opacity=Math.max(0,Math.min(1,(m.userData.base||.5)*op));});}
+
+/* HUD */
+var spineFill=document.getElementById('proc-spine-fill');
+var pill=document.getElementById('proc-pill');
+var tlFill=document.getElementById('proc-tl-fill');
+var procFinal=document.getElementById('proc-final');
+var hint=document.getElementById('proc-hint');
+var dots=[].slice.call(document.querySelectorAll('.proc-dot'));
+var stEls=[].slice.call(document.querySelectorAll('.proc-stage'));
+
+dots.forEach(function(d,i){
+  d.addEventListener('click',function(){
+    var maxSc=document.documentElement.scrollHeight-window.innerHeight;
+    window.scrollTo({top:(i/(N+.3))*maxSc,behavior:'smooth'});
+  });
+});
+
+/* Panel helpers */
+window.openPanel=function(i){document.getElementById('proc-panel-'+i).classList.add('open');};
+window.closePanel=function(i){document.getElementById('proc-panel-'+i).classList.remove('open');};
+
+/* Camera target */
+var tCX=0,tCY=0,tCZ=14,tCRX=0,tCRY=0;
+var clock=new THREE.Clock();
+var ticking=false;
+
+function processScroll(){
+  ticking=false;
+  var maxSc=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+  var pct=Math.max(0,Math.min(1,window.scrollY/maxSc));
+  spineFill.style.height=(pct*100)+'%';
+  tlFill.style.width=(pct*100)+'%';
+  if(pct>.02)hint.classList.add('hidden');
+  var isAsm=pct>.9;
+  procFinal.classList.toggle('show',isAsm);
+  asmGrp.visible=isAsm;
+  var chF=Math.min(N,Math.max(0,pct/.87)*N);
+  var ch=Math.min(N-1,Math.floor(chF));
+  var t=chF-Math.floor(chF);
+  var st=t*t*(3-2*t);
+  stEls.forEach(function(el,i){el.classList.toggle('visible',Math.abs(chF-i)<.42&&!isAsm);});
+  dots.forEach(function(d,i){d.classList.toggle('active',i===ch);});
+  var cs=STAGES[ch],cn=STAGES[Math.min(N-1,ch+1)];
+  pill.textContent='0'+(ch+1)+' — '+cs.concept;
+  pill.style.color=sColors[ch];pill.style.borderColor=sColors[ch]+'28';
+  tCX=cs.cam.x+(cn.cam.x-cs.cam.x)*st;
+  tCY=cs.cam.y+(cn.cam.y-cs.cam.y)*st;
+  tCZ=cs.cam.z+(cn.cam.z-cs.cam.z)*st;
+  tCRX=cs.cam.rx+(cn.cam.rx-cs.cam.rx)*st;
+  tCRY=cs.cam.ry+(cn.cam.ry-cs.cam.ry)*st;
+  /* Signal: connections opacity ramp with stage progress */
+  if(ch===0&&grps[0].userData&&grps[0].userData.connMat){
+    grps[0].userData.connMat.opacity=.04+t*.22;
+  }
+  grps.forEach(function(grp,i){
+    var dist=Math.abs(chF-i);grp.visible=dist<1.8&&!isAsm;
+    if(grp.visible)setOp(i,Math.max(0,Math.min(1,1-Math.max(0,dist-.25)*2.5)));
+  });
+  var fA=new THREE.Color(cs.fog),fB=new THREE.Color(cn.fog);
+  scene.fog.color.copy(fA.lerp(fB,st));renderer.setClearColor(scene.fog.color,1);
+  var lcA=new THREE.Color(cs.color),lcB=new THREE.Color(cn.color);
+  kl.color.copy(lcA.lerp(lcB,st));
+}
+window.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(processScroll);},{passive:true});
+
+/* Animation loop */
+function animate(){
+  requestAnimationFrame(animate);
+  var t=clock.getElapsedTime();
+  camera.position.x+=(tCX-camera.position.x)*.055;
+  camera.position.y+=(tCY-camera.position.y)*.055;
+  camera.position.z+=(tCZ-camera.position.z)*.055;
+  camera.rotation.x+=(tCRX-camera.rotation.x)*.042;
+  camera.rotation.y+=(tCRY-camera.rotation.y)*.042;
+  camera.position.y+=Math.sin(t*.4)*.038;
+  camera.position.x+=Math.sin(t*.29)*.018;
+  grps.forEach(function(grp){
+    if(!grp.visible)return;
+    grp.traverse(function(obj){
+      if(obj.userData.spinSpeed)obj.rotation[obj.userData.spinAxis||'y']+=obj.userData.spinSpeed;
+      if(obj.userData.floatAmp)obj.position.y+=Math.sin(t*(obj.userData.floatFreq||.4)+(obj.userData.floatPhase||0))*obj.userData.floatAmp;
+      if(obj.userData.pulse)obj.scale.setScalar(.9+Math.sin(t*1.6)*.1);
+      if(obj.userData.isSat){
+        obj.userData.orbitPhase+=obj.userData.orbitSpeed;
+        obj.position.x=Math.cos(obj.userData.orbitPhase)*obj.userData.orbitR;
+        obj.position.z=Math.sin(obj.userData.orbitPhase)*obj.userData.orbitR;
+        if(obj.userData.orbitY!==undefined)obj.position.y=obj.userData.orbitY+Math.sin(t*.5)*.3;
+      }
+    });
+  });
+  if(asmGrp.visible){
+    asmGrp.rotation.y+=.004;
+    asmGrp.traverse(function(obj){
+      if(obj.userData.spinSpeed)obj.rotation[obj.userData.spinAxis||'y']+=obj.userData.spinSpeed;
+      if(obj.userData.pulse)obj.scale.setScalar(.9+Math.sin(t*2)*.1);
+      if(obj.userData.isSat){
+        obj.userData.orbitPhase+=obj.userData.orbitSpeed;
+        obj.position.x=Math.cos(obj.userData.orbitPhase)*obj.userData.orbitR;
+        obj.position.z=Math.sin(obj.userData.orbitPhase)*obj.userData.orbitR;
+      }
+    });
+  }
+  renderer.render(scene,camera);
+}
+
+window.addEventListener('resize',function(){
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+},{passive:true});
+
+animate();
+processScroll();
+})();
+</script>
+</body>
+</html>

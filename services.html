@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Amoghya Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+body{overflow-x:hidden}
+#svc-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+#svc-scroll{height:800vh;position:relative;pointer-events:none}
+#svc-overlay{position:fixed;inset:0;z-index:8;display:flex;align-items:center;pointer-events:none}
+.svc-ch{position:absolute;left:72px;max-width:460px;opacity:0;transform:translateY(20px);transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.svc-ch.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.svc-ch-eyebrow{font-size:9px;letter-spacing:.46em;text-transform:uppercase;color:rgba(240,235,225,.28);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.svc-ch-eyebrow::before{content:'';display:block;width:28px;height:1px;background:currentColor;opacity:.55}
+.svc-ch-concept{font-size:10px;letter-spacing:.42em;text-transform:uppercase;margin-bottom:18px}
+.svc-ch-title{font-family:'Syne',sans-serif;font-size:clamp(50px,5.8vw,86px);font-weight:800;line-height:.88;letter-spacing:-.03em;text-transform:uppercase;color:var(--fg);margin-bottom:22px}
+.svc-ch-title span{-webkit-text-stroke:1.5px;color:transparent}
+.svc-ch-narrative{font-size:13.5px;color:var(--fg2);line-height:1.9;margin-bottom:26px;max-width:380px}
+.svc-ch-feats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:32px}
+.svc-ch-feat{font-size:9px;letter-spacing:.22em;text-transform:uppercase;padding:5px 13px;border:1px solid;border-radius:2px}
+.svc-ch-cta{display:inline-flex;align-items:center;gap:12px;font-size:10px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:var(--fg);transition:gap .22s}
+.svc-ch-cta:hover{gap:18px}
+.svc-ch-cta svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+#svc-spine{position:fixed;left:0;top:0;bottom:0;width:3px;background:rgba(240,235,225,.04);z-index:20;pointer-events:none}
+#svc-spine-fill{position:absolute;top:0;left:0;right:0;height:0%;background:linear-gradient(to bottom,var(--gold),rgba(196,164,107,.3));border-radius:0 0 2px 2px}
+#svc-pill{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:20;font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:rgba(240,235,225,.3);padding:6px 20px;border:1px solid rgba(240,235,225,.08);border-radius:40px;backdrop-filter:blur(10px);white-space:nowrap;transition:color .5s,border-color .5s;pointer-events:none}
+#svc-dots{position:fixed;right:32px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:20}
+.svc-dot{width:3px;height:3px;border-radius:50%;background:rgba(240,235,225,.18);cursor:pointer;transition:background .3s,height .3s,border-radius .3s;position:relative}
+.svc-dot.active{background:var(--gold);height:14px;border-radius:2px}
+.svc-dot::after{content:attr(data-label);position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,235,225,.28);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.svc-dot:hover::after,.svc-dot.active::after{opacity:1}
+.svc-dot.active::after{color:var(--gold)}
+#svc-tl{position:fixed;bottom:0;left:0;right:0;height:2px;background:rgba(240,235,225,.04);z-index:20;pointer-events:none}
+#svc-tl-fill{height:100%;width:0%;background:linear-gradient(to right,var(--gold),rgba(196,164,107,.4))}
+#svc-pct{position:fixed;bottom:36px;right:80px;z-index:20;font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:rgba(240,235,225,.2);pointer-events:none}
+#svc-epilogue{position:fixed;inset:0;z-index:12;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .9s cubic-bezier(.16,1,.3,1);text-align:center;padding:0 40px}
+#svc-epilogue.show{opacity:1;pointer-events:auto}
+.ep-pre{font-size:9px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;opacity:0;transform:translateY(10px);transition:opacity .6s .2s,transform .6s .2s}
+#svc-epilogue.show .ep-pre{opacity:1;transform:none}
+.ep-word{font-family:'Syne',sans-serif;font-size:clamp(44px,7vw,112px);font-weight:800;line-height:.88;letter-spacing:-.035em;text-transform:uppercase;color:var(--fg);margin-bottom:28px;opacity:0;transform:translateY(20px);transition:opacity .7s .35s,transform .7s .35s}
+#svc-epilogue.show .ep-word{opacity:1;transform:none}
+.ep-sub{font-size:10px;letter-spacing:.44em;text-transform:uppercase;color:rgba(240,235,225,.38);margin-bottom:52px;opacity:0;transition:opacity .6s .5s}
+#svc-epilogue.show .ep-sub{opacity:1}
+.ep-btns{display:flex;gap:16px;justify-content:center;opacity:0;transform:translateY(10px);transition:opacity .6s .65s,transform .6s .65s}
+#svc-epilogue.show .ep-btns{opacity:1;transform:none}
+.svc-hint{position:fixed;bottom:52px;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:rgba(240,235,225,.22);transition:opacity .5s;pointer-events:none}
+.svc-hint.hidden{opacity:0}
+.svc-hint-line{width:1px;height:44px;background:linear-gradient(to bottom,rgba(196,164,107,.5),transparent);animation:hint-grow 2s 1.2s ease-in-out infinite}
+@keyframes hint-grow{0%{transform:scaleY(0);transform-origin:top;opacity:0}30%{transform:scaleY(1);transform-origin:top;opacity:1}70%{transform:scaleY(1);transform-origin:bottom;opacity:1}100%{transform:scaleY(0);transform-origin:bottom;opacity:0}}@media (max-width: 900px) {
+  .svc-ch-title { font-size: clamp(32px, 8vw, 48px) !important; text-align: center; }
+  .ep-word { font-size: clamp(28px, 9vw, 56px) !important; }
+  .svc-ch-narrative { max-width: 100% !important; text-align: center; margin-left: auto; margin-right: auto; padding: 0 20px; }
+  .svc-ch-inner { left: 0 !important; right: 0 !important; transform: none !important; position: relative !important; text-align: center !important; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px 20px; }
+  .svc-ch-eyebrow, .svc-ch-concept { justify-content: center; }
+}
+</style>
+</head>
+<body>
+<div id="page-veil"></div>
+<div id="cur-label"></div>
+<div id="scroll-progress"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="scroll-trace"></div>
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Amogh<b>ya</b></a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="process.html">Process</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Start a Project</a>
+</nav>
+<canvas id="svc-canvas"></canvas>
+<div id="svc-spine"><div id="svc-spine-fill"></div></div>
+<div id="svc-pill">Chapter 01 &mdash; Presence</div>
+<div id="svc-dots">
+  <div class="svc-dot active" data-i="0" data-label="Presence"></div>
+  <div class="svc-dot" data-i="1" data-label="Systems"></div>
+  <div class="svc-dot" data-i="2" data-label="Attention"></div>
+  <div class="svc-dot" data-i="3" data-label="Intelligence"></div>
+  <div class="svc-dot" data-i="4" data-label="Growth"></div>
+  <div class="svc-dot" data-i="5" data-label="Identity"></div>
+  <div class="svc-dot" data-i="6" data-label="Evolution"></div>
+</div>
+<div id="svc-tl"><div id="svc-tl-fill"></div></div>
+<div id="svc-pct">00%</div>
+<div class="svc-hint" id="svc-hint"><div class="svc-hint-line"></div>Scroll to journey</div>
+<div id="svc-overlay">
+  <div class="svc-ch visible" id="ch0">
+    <div class="svc-ch-eyebrow">Chapter 01</div>
+    <div class="svc-ch-concept" style="color:#22d3ee">Presence</div>
+    <h2 class="svc-ch-title">Web<br><span style="-webkit-text-stroke-color:rgba(34,211,238,.35)">Development</span></h2>
+    <p class="svc-ch-narrative">Every brand begins with a presence. We build digital homes that command attention, demand return visits, and convert visitors into believers.</p>
+    <div class="svc-ch-feats">
+      <span class="svc-ch-feat" style="border-color:rgba(34,211,238,.2);color:rgba(34,211,238,.75)">Premium Websites</span>
+      <span class="svc-ch-feat" style="border-color:rgba(34,211,238,.2);color:rgba(34,211,238,.75)">3D Interfaces</span>
+      <span class="svc-ch-feat" style="border-color:rgba(34,211,238,.2);color:rgba(34,211,238,.75)">UI/UX Design</span>
+      <span class="svc-ch-feat" style="border-color:rgba(34,211,238,.2);color:rgba(34,211,238,.75)">Landing Pages</span>
+      <span class="svc-ch-feat" style="border-color:rgba(34,211,238,.2);color:rgba(34,211,238,.75)">E-Commerce</span>
+      <span class="svc-ch-feat" style="border-color:rgba(34,211,238,.2);color:rgba(34,211,238,.75)">Performance</span>
+    </div>
+    <a href="contact.html" class="svc-ch-cta" style="color:#22d3ee" data-cursor-label="Start Project">Begin with presence <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+  <div class="svc-ch" id="ch1">
+    <div class="svc-ch-eyebrow">Chapter 02</div>
+    <div class="svc-ch-concept" style="color:#a855f7">Systems</div>
+    <h2 class="svc-ch-title">App<br><span style="-webkit-text-stroke-color:rgba(168,85,247,.35)">Development</span></h2>
+    <p class="svc-ch-narrative">Presence becomes interaction. We architect systems that think, adapt, and scale &mdash; turning complex requirements into experiences your users never want to leave.</p>
+    <div class="svc-ch-feats">
+      <span class="svc-ch-feat" style="border-color:rgba(168,85,247,.2);color:rgba(168,85,247,.75)">SaaS Platforms</span>
+      <span class="svc-ch-feat" style="border-color:rgba(168,85,247,.2);color:rgba(168,85,247,.75)">Dashboards</span>
+      <span class="svc-ch-feat" style="border-color:rgba(168,85,247,.2);color:rgba(168,85,247,.75)">APIs &amp; Backend</span>
+      <span class="svc-ch-feat" style="border-color:rgba(168,85,247,.2);color:rgba(168,85,247,.75)">Mobile Apps</span>
+      <span class="svc-ch-feat" style="border-color:rgba(168,85,247,.2);color:rgba(168,85,247,.75)">Full-Stack</span>
+      <span class="svc-ch-feat" style="border-color:rgba(168,85,247,.2);color:rgba(168,85,247,.75)">MVP Builds</span>
+    </div>
+    <a href="contact.html" class="svc-ch-cta" style="color:#a855f7" data-cursor-label="Start Project">Build the system <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+  <div class="svc-ch" id="ch2">
+    <div class="svc-ch-eyebrow">Chapter 03</div>
+    <div class="svc-ch-concept" style="color:#f97316">Attention</div>
+    <h2 class="svc-ch-title">Content<br><span style="-webkit-text-stroke-color:rgba(249,115,22,.35)">Production</span></h2>
+    <p class="svc-ch-narrative">Interaction demands attention. We produce cinematic content that stops thumbs mid-scroll &mdash; stories told so compellingly your audience cannot look away.</p>
+    <div class="svc-ch-feats">
+      <span class="svc-ch-feat" style="border-color:rgba(249,115,22,.2);color:rgba(249,115,22,.75)">Brand Films</span>
+      <span class="svc-ch-feat" style="border-color:rgba(249,115,22,.2);color:rgba(249,115,22,.75)">Motion Design</span>
+      <span class="svc-ch-feat" style="border-color:rgba(249,115,22,.2);color:rgba(249,115,22,.75)">Social Reels</span>
+      <span class="svc-ch-feat" style="border-color:rgba(249,115,22,.2);color:rgba(249,115,22,.75)">Photography</span>
+      <span class="svc-ch-feat" style="border-color:rgba(249,115,22,.2);color:rgba(249,115,22,.75)">3D Animation</span>
+      <span class="svc-ch-feat" style="border-color:rgba(249,115,22,.2);color:rgba(249,115,22,.75)">Product Video</span>
+    </div>
+    <a href="contact.html" class="svc-ch-cta" style="color:#f97316" data-cursor-label="Start Project">Capture attention <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+  <div class="svc-ch" id="ch3">
+    <div class="svc-ch-eyebrow">Chapter 04</div>
+    <div class="svc-ch-concept" style="color:#84cc16">Intelligence</div>
+    <h2 class="svc-ch-title">AI<br><span style="-webkit-text-stroke-color:rgba(132,204,22,.35)">Solutions</span></h2>
+    <p class="svc-ch-narrative">Attention evolves into intelligence. We integrate AI that learns, predicts, and generates &mdash; transforming how your brand operates, creates, and connects.</p>
+    <div class="svc-ch-feats">
+      <span class="svc-ch-feat" style="border-color:rgba(132,204,22,.2);color:rgba(132,204,22,.75)">LLM Integration</span>
+      <span class="svc-ch-feat" style="border-color:rgba(132,204,22,.2);color:rgba(132,204,22,.75)">AI Chatbots</span>
+      <span class="svc-ch-feat" style="border-color:rgba(132,204,22,.2);color:rgba(132,204,22,.75)">Automation</span>
+      <span class="svc-ch-feat" style="border-color:rgba(132,204,22,.2);color:rgba(132,204,22,.75)">Generative AI</span>
+      <span class="svc-ch-feat" style="border-color:rgba(132,204,22,.2);color:rgba(132,204,22,.75)">ML Pipelines</span>
+      <span class="svc-ch-feat" style="border-color:rgba(132,204,22,.2);color:rgba(132,204,22,.75)">Predictions</span>
+    </div>
+    <a href="contact.html" class="svc-ch-cta" style="color:#84cc16" data-cursor-label="Start Project">Activate intelligence <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+  <div class="svc-ch" id="ch4">
+    <div class="svc-ch-eyebrow">Chapter 05</div>
+    <div class="svc-ch-concept" style="color:#38bdf8">Growth</div>
+    <h2 class="svc-ch-title">Digital<br><span style="-webkit-text-stroke-color:rgba(56,189,248,.35)">Growth</span></h2>
+    <p class="svc-ch-narrative">Intelligence drives growth. We design data-driven strategies that compound &mdash; every campaign, every keyword, every post working toward measurable results.</p>
+    <div class="svc-ch-feats">
+      <span class="svc-ch-feat" style="border-color:rgba(56,189,248,.2);color:rgba(56,189,248,.75)">SEO / SEM</span>
+      <span class="svc-ch-feat" style="border-color:rgba(56,189,248,.2);color:rgba(56,189,248,.75)">Social Campaigns</span>
+      <span class="svc-ch-feat" style="border-color:rgba(56,189,248,.2);color:rgba(56,189,248,.75)">Paid Advertising</span>
+      <span class="svc-ch-feat" style="border-color:rgba(56,189,248,.2);color:rgba(56,189,248,.75)">Email Marketing</span>
+      <span class="svc-ch-feat" style="border-color:rgba(56,189,248,.2);color:rgba(56,189,248,.75)">Analytics</span>
+      <span class="svc-ch-feat" style="border-color:rgba(56,189,248,.2);color:rgba(56,189,248,.75)">CRO</span>
+    </div>
+    <a href="contact.html" class="svc-ch-cta" style="color:#38bdf8" data-cursor-label="Start Project">Drive growth <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+  <div class="svc-ch" id="ch5">
+    <div class="svc-ch-eyebrow">Chapter 06</div>
+    <div class="svc-ch-concept" style="color:#c4a46b">Identity</div>
+    <h2 class="svc-ch-title">Brand<br><span style="-webkit-text-stroke-color:rgba(196,164,107,.35)">Identity</span></h2>
+    <p class="svc-ch-narrative">Growth creates recognition. We craft complete visual identities that crystallise who you are &mdash; seen once and never forgotten, felt before they are read.</p>
+    <div class="svc-ch-feats">
+      <span class="svc-ch-feat" style="border-color:rgba(196,164,107,.2);color:rgba(196,164,107,.75)">Logo Design</span>
+      <span class="svc-ch-feat" style="border-color:rgba(196,164,107,.2);color:rgba(196,164,107,.75)">Typography</span>
+      <span class="svc-ch-feat" style="border-color:rgba(196,164,107,.2);color:rgba(196,164,107,.75)">Colour Systems</span>
+      <span class="svc-ch-feat" style="border-color:rgba(196,164,107,.2);color:rgba(196,164,107,.75)">Brand Guidelines</span>
+      <span class="svc-ch-feat" style="border-color:rgba(196,164,107,.2);color:rgba(196,164,107,.75)">Packaging</span>
+      <span class="svc-ch-feat" style="border-color:rgba(196,164,107,.2);color:rgba(196,164,107,.75)">Stationery</span>
+    </div>
+    <a href="contact.html" class="svc-ch-cta" style="color:#c4a46b" data-cursor-label="Start Project">Define identity <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+  <div class="svc-ch" id="ch6">
+    <div class="svc-ch-eyebrow">Chapter 07</div>
+    <div class="svc-ch-concept" style="color:#f472b6">Evolution</div>
+    <h2 class="svc-ch-title">Care &amp;<br><span style="-webkit-text-stroke-color:rgba(244,114,182,.35)">Support</span></h2>
+    <p class="svc-ch-narrative">Great products never stop evolving. We maintain, protect, and grow what we build &mdash; a living partnership that compounds value long after launch day.</p>
+    <div class="svc-ch-feats">
+      <span class="svc-ch-feat" style="border-color:rgba(244,114,182,.2);color:rgba(244,114,182,.75)">Monitoring</span>
+      <span class="svc-ch-feat" style="border-color:rgba(244,114,182,.2);color:rgba(244,114,182,.75)">Security</span>
+      <span class="svc-ch-feat" style="border-color:rgba(244,114,182,.2);color:rgba(244,114,182,.75)">Updates</span>
+      <span class="svc-ch-feat" style="border-color:rgba(244,114,182,.2);color:rgba(244,114,182,.75)">Bug Fixes</span>
+      <span class="svc-ch-feat" style="border-color:rgba(244,114,182,.2);color:rgba(244,114,182,.75)">Hosting</span>
+      <span class="svc-ch-feat" style="border-color:rgba(244,114,182,.2);color:rgba(244,114,182,.75)">Priority SLA</span>
+    </div>
+    <a href="contact.html" class="svc-ch-cta" style="color:#f472b6" data-cursor-label="Start Project">Keep evolving <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<div id="svc-epilogue">
+  <div class="ep-pre">The full ecosystem</div>
+  <div class="ep-word">Amoghya<br>Technologies</div>
+  <div class="ep-sub">Build &nbsp;&middot;&nbsp; Grow &nbsp;&middot;&nbsp; Evolve</div>
+  <div class="ep-btns">
+    <a href="contact.html" class="btn-pri" data-cursor-label="Start Project">Start a Project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a href="work.html" class="btn-out">See Our Work</a>
+  </div>
+</div>
+<nav class="pg-nav">
+  <a href="about.html" class="pg-arrow prev"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>About</a>
+  <a href="work.html" class="pg-arrow next">Work<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+</nav>
+<div id="svc-scroll"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="main.js"></script>
+<script>
+(function(){
+'use strict';
+if(typeof THREE==='undefined')return;
+var CHAPTERS=[
+  {num:'01',concept:'Presence',   color:0x22d3ee,fog:0x010c12,cam:{x:0,   y:2.5, z:16, rx:-0.14,ry:0}},
+  {num:'02',concept:'Systems',    color:0xa855f7,fog:0x060010,cam:{x:1.5, y:0.5, z:12, rx:0.04, ry:0.1}},
+  {num:'03',concept:'Attention',  color:0xf97316,fog:0x0e0200,cam:{x:0,   y:0,   z:14, rx:0,    ry:0}},
+  {num:'04',concept:'Intelligence',color:0x84cc16,fog:0x030600,cam:{x:0,   y:0,   z:10, rx:0.07, ry:0.05}},
+  {num:'05',concept:'Growth',     color:0x38bdf8,fog:0x010610,cam:{x:0,   y:-2.5,z:15, rx:0.18, ry:0}},
+  {num:'06',concept:'Identity',   color:0xc4a46b,fog:0x080500,cam:{x:-1.5,y:1,   z:12, rx:0,    ry:-0.08}},
+  {num:'07',concept:'Evolution',  color:0xf472b6,fog:0x0a0010,cam:{x:0,   y:0,   z:18, rx:-0.05,ry:0}}
+];
+var N=CHAPTERS.length;
+var chColors=['#22d3ee','#a855f7','#f97316','#84cc16','#38bdf8','#c4a46b','#f472b6'];
+var canvas=document.getElementById('svc-canvas');
+var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setClearColor(0x030508,1);
+var scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x030508,0.038);
+var camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,400);
+camera.position.set(0,2.5,16);
+scene.add(new THREE.AmbientLight(0x0a0a14,1));
+var keyLight=new THREE.PointLight(0x22d3ee,3,120);
+keyLight.position.set(0,10,5);
+scene.add(keyLight);
+
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp01(v){return Math.max(0,Math.min(1,v));}
+function ss(t){t=clamp01(t);return t*t*(3-2*t);}
+function lmat(c,o){return new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o});}
+function pts(count,sp,spy,oz){
+  var pos=new Float32Array(count*3);
+  for(var i=0;i<count;i++){pos[i*3]=(Math.random()-.5)*sp;pos[i*3+1]=(Math.random()-.5)*(spy||sp*.5);pos[i*3+2]=(Math.random()-.5)*(sp*.7)+oz;}
+  var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));return g;
+}
+
+function buildPresence(){
+  var g=new THREE.Group(),c=0x22d3ee,lm=lmat(c,.3);
+  var hts=[6,3,8,4,10,2,7,5,9,3.5,6.5,4.5,8,2.5,11,3,7,5.5];
+  hts.forEach(function(h,i){
+    var col=(i%6)-2.5,row=Math.floor(i/6)-1;
+    var geo=new THREE.BoxGeometry(1.2,h,1.2);
+    var m=new THREE.LineSegments(new THREE.EdgesGeometry(geo),lm.clone());
+    m.position.set(col*3.5+Math.sin(i)*.4,h/2-4,row*3.5+Math.cos(i)*.4);
+    m.userData.floatAmp=.003+Math.random()*.004;m.userData.floatFreq=.4+Math.random()*.4;m.userData.floatPhase=Math.random()*Math.PI*2;
+    g.add(m);geo.dispose();
+  });
+  [[4,2.4,-5,0,.3],[3,2,-2.5,-.15,-.2],[4.5,2.6,-6.5,.05,.12],[2.5,3,-3.5,.1,-.4],[3.5,2,-5,.08,.26]].forEach(function(d){
+    var geo=new THREE.PlaneGeometry(d[0],d[1]);
+    var pg=new THREE.Group();
+    pg.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.04,side:THREE.DoubleSide})));
+    pg.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),lmat(c,.42)));
+    pg.position.set((Math.random()-.5)*8,(Math.random()-.5)*4+1,d[2]);pg.rotation.set(d[3],d[4],0);
+    pg.userData.floatAmp=.002;pg.userData.floatFreq=.3;pg.userData.floatPhase=Math.random()*Math.PI*2;
+    g.add(pg);geo.dispose();
+  });
+  g.add(new THREE.Points(pts(900,40,20,-8),new THREE.PointsMaterial({color:c,size:.055,transparent:true,opacity:.65})));
+  return g;
+}
+
+function buildSystems(){
+  var g=new THREE.Group(),c=0xa855f7;
+  var pm=new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.045,side:THREE.DoubleSide});
+  var centers=[];
+  [[-4,2,-3,.1,.3],[3,-1,-2,-.1,-.25],[0,3,-6,0,.15],[-5,-2,-4,.2,.4],[4.5,1.5,-5,-.05,-.35],[-1,-3,-3,.15,-.1],[2,4,-4,.08,.22],[5,-2.5,-2,0,-.3]].forEach(function(d){
+    var geo=new THREE.PlaneGeometry(2.8+Math.random()*1.5,1.8+Math.random()*1.5);
+    var grp=new THREE.Group();
+    grp.add(new THREE.Mesh(geo,pm.clone()));grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),lmat(c,.38)));
+    grp.position.set(d[0],d[1],d[2]);grp.rotation.set(d[3],d[4],0);
+    grp.userData.floatAmp=.0025;grp.userData.floatFreq=.35;grp.userData.floatPhase=Math.random()*Math.PI*2;
+    g.add(grp);centers.push(new THREE.Vector3(d[0],d[1],d[2]));geo.dispose();
+  });
+  [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[0,4],[2,6],[1,5]].forEach(function(e){
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([centers[e[0]],centers[e[1]]]),lmat(c,.16)));
+  });
+  centers.forEach(function(p){
+    var d=new THREE.Mesh(new THREE.SphereGeometry(.09,8,8),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.8}));
+    d.position.copy(p);g.add(d);
+  });
+  g.add(new THREE.Points(pts(750,38,18,-6),new THREE.PointsMaterial({color:c,size:.05,transparent:true,opacity:.6})));
+  return g;
+}
+
+function buildAttention(){
+  var g=new THREE.Group(),c=0xf97316;
+  [[4,.042,Math.PI/2,0,.62],[3,.036,Math.PI/2+.3,.2,.5],[2.2,.03,Math.PI/2+.6,-.3,.55],[5.2,.05,Math.PI/2-.2,.1,.42],[1.5,.025,Math.PI/2+.9,.4,.65],[6.5,.04,Math.PI/2-.4,-.1,.32],[.8,.022,0,0,.7]].forEach(function(d,i){
+    var m=new THREE.Mesh(new THREE.TorusGeometry(d[0],d[1],8,80),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:d[4]}));
+    m.rotation.set(d[2],d[3],0);m.userData.spinSpeed=(i%2===0?1:-1)*(.003+i*.0007);m.userData.spinAxis='z';g.add(m);
+  });
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(.32,20,20),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.9})));
+  var bm=new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.07,side:THREE.DoubleSide});
+  for(var i=0;i<8;i++){
+    var a=(i/8)*Math.PI*2;
+    var bm2=new THREE.Mesh(new THREE.CylinderGeometry(.02,.28,12,4),bm.clone());
+    bm2.position.set(Math.cos(a)*6,Math.sin(a)*6,-2);bm2.rotation.z=a+Math.PI/2;g.add(bm2);
+  }
+  var fm=lmat(c,.32);
+  for(var i=0;i<12;i++){
+    var a=(i/12)*Math.PI*2,r=7.5+Math.random()*2;
+    var geo=new THREE.PlaneGeometry(1.6,1);
+    var fr=new THREE.LineSegments(new THREE.EdgesGeometry(geo),fm.clone());
+    fr.position.set(Math.cos(a)*r,(Math.random()-.5)*5,Math.sin(a)*r-5);fr.rotation.y=a+Math.PI/2;
+    fr.userData.floatAmp=.003;fr.userData.floatFreq=.28;fr.userData.floatPhase=Math.random()*Math.PI*2;
+    g.add(fr);geo.dispose();
+  }
+  g.add(new THREE.Points(pts(650,40,20,-6),new THREE.PointsMaterial({color:c,size:.05,transparent:true,opacity:.55})));
+  return g;
+}
+
+function buildIntelligence(){
+  var g=new THREE.Group(),c=0x84cc16;
+  var icoGeo=new THREE.IcosahedronGeometry(5.5,2);
+  var pa=icoGeo.attributes.position,nodes=[],seen={};
+  for(var i=0;i<pa.count;i++){
+    var x=pa.getX(i),y=pa.getY(i),z=pa.getZ(i);
+    var k=x.toFixed(1)+','+y.toFixed(1)+','+z.toFixed(1);
+    if(!seen[k]){seen[k]=1;nodes.push(new THREE.Vector3(x,y,z));}
+  }
+  icoGeo.dispose();
+  var nm=new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.75});
+  nodes.forEach(function(p){
+    var n=new THREE.Mesh(new THREE.SphereGeometry(.13,8,8),nm.clone());
+    n.position.copy(p);n.userData.pulsePhase=Math.random()*Math.PI*2;n.userData.isNode=true;g.add(n);
+  });
+  var cm=lmat(c,.14);
+  for(var i=0;i<nodes.length;i++)for(var j=i+1;j<nodes.length;j++)
+    if(nodes[i].distanceTo(nodes[j])<3.8)
+      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([nodes[i],nodes[j]]),cm.clone()));
+  [[8,1,-4],[-7,2,-3],[5,-3,-5],[-6,-2,-4],[0,7,-5],[0,-7,-4]].forEach(function(p){
+    var m=new THREE.Mesh(new THREE.IcosahedronGeometry(.65+Math.random()*.4,0),new THREE.MeshBasicMaterial({color:c,wireframe:true,transparent:true,opacity:.22}));
+    m.position.set(p[0],p[1],p[2]);m.userData.spinSpeed=(Math.random()-.5)*.009;m.userData.spinAxis='y';g.add(m);
+  });
+  g.add(new THREE.Points(pts(900,36,18,-5),new THREE.PointsMaterial({color:c,size:.048,transparent:true,opacity:.65})));
+  return g;
+}
+
+function buildGrowth(){
+  var g=new THREE.Group(),c=0x38bdf8,sm=lmat(c,.38);
+  for(var i=0;i<55;i++){
+    var x=(Math.random()-.5)*30,z=(Math.random()-.5)*20-5,h=8+Math.random()*14,p2=[];
+    for(var s=0;s<=14;s++){var t=s/14;p2.push(new THREE.Vector3(x+Math.sin(t*Math.PI*2)*.3,-6+t*h,z+Math.cos(t*Math.PI*1.5)*.2));}
+    var ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(p2),sm.clone());
+    ln.material.opacity=.1+Math.random()*.4;g.add(ln);
+  }
+  var am=lmat(c,.55);
+  for(var i=0;i<10;i++){
+    var x=(Math.random()-.5)*22,p2=[];
+    for(var s=0;s<=30;s++){var t=s/30;p2.push(new THREE.Vector3(x+Math.sin(t*Math.PI)*3.5,-6+t*13,-5+Math.cos(t*Math.PI)*2));}
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(p2),am.clone()));
+  }
+  var gm=lmat(c,.09);
+  for(var i=-8;i<=8;i++){
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-16,-6,i*2-5),new THREE.Vector3(16,-6,i*2-5)]),gm.clone()));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i*2,-6,-22),new THREE.Vector3(i*2,-6,12)]),gm.clone()));
+  }
+  var bm=lmat(c,.22);
+  for(var i=0;i<35;i++){
+    var x=(Math.random()-.5)*28,z=(Math.random()-.5)*18-5;
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,-6,z),new THREE.Vector3(x+(Math.random()-.5)*4,-6+2+Math.random()*2,z+(Math.random()-.5)*3)]),bm.clone()));
+  }
+  g.add(new THREE.Points(pts(850,36,24,-7),new THREE.PointsMaterial({color:c,size:.055,transparent:true,opacity:.68})));
+  return g;
+}
+
+function buildIdentity(){
+  var g=new THREE.Group(),c=0xc4a46b;
+  var kGeo=new THREE.TorusKnotGeometry(3,.35,120,12,2,3);
+  var knot=new THREE.LineSegments(new THREE.EdgesGeometry(kGeo),lmat(c,.62));
+  knot.userData.spinSpeed=.004;knot.userData.spinAxis='y';g.add(knot);kGeo.dispose();
+  [[5,.042,Math.PI/2,.5,.38],[6.5,.032,Math.PI/2+.8,-.3,.3],[4,.05,.4,.2,.34],[7.5,.025,-.5,.7,.24]].forEach(function(d){
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(d[0],d[1],6,80),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:d[4]})));
+  });
+  var fm=lmat(c,.28);
+  for(var i=0;i<16;i++){
+    var s=.8+Math.random()*1.6,geo=new THREE.PlaneGeometry(s,s);
+    var fr=new THREE.LineSegments(new THREE.EdgesGeometry(geo),fm.clone());
+    fr.position.set((Math.random()-.5)*22,(Math.random()-.5)*12,(Math.random()-.5)*16-5);
+    fr.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,(Math.random()-.5)*.4);
+    fr.userData.spinSpeed=(Math.random()-.5)*.004;fr.userData.spinAxis=Math.random()>.5?'y':'x';
+    g.add(fr);geo.dispose();
+  }
+  g.add(new THREE.Points(pts(750,40,20,-6),new THREE.PointsMaterial({color:c,size:.058,transparent:true,opacity:.65})));
+  return g;
+}
+
+function buildEvolution(){
+  var g=new THREE.Group(),c=0xf472b6;
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(1.2,24,24),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.4,wireframe:true})));
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(.75,16,16),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.35})));
+  [[4,.065,Math.PI/2,0,.007,.55],[6,.05,Math.PI/2+.9,.3,-.005,.42],[8,.04,Math.PI/2-.7,-.5,.003,.36],[5,.058,.4,.8,-.006,.46],[10,.03,-.3,.6,.002,.28]].forEach(function(d){
+    var t2=new THREE.Mesh(new THREE.TorusGeometry(d[0],d[1],6,80),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:d[5]}));
+    t2.rotation.set(d[2],d[3],0);t2.userData.spinSpeed=d[4];t2.userData.spinAxis='z';g.add(t2);
+  });
+  [0x22d3ee,0xa855f7,0xf97316,0x84cc16,0x38bdf8,0xc4a46b,0xf472b6].forEach(function(col){
+    var geo=new THREE.BufferGeometry(),pos=new Float32Array(130*3);
+    for(var i=0;i<130;i++){
+      var th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=11+Math.random()*7;
+      pos[i*3]=r*Math.sin(ph)*Math.cos(th);pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);pos[i*3+2]=r*Math.cos(ph);
+    }
+    geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    g.add(new THREE.Points(geo,new THREE.PointsMaterial({color:col,size:.08,transparent:true,opacity:.7})));
+  });
+  return g;
+}
+
+var chGroups=[buildPresence,buildSystems,buildAttention,buildIntelligence,buildGrowth,buildIdentity,buildEvolution].map(function(b){return b();});
+chGroups.forEach(function(grp,i){grp.visible=(i===0);scene.add(grp);});
+
+var chMats=chGroups.map(function(grp){
+  var mats=[];
+  grp.traverse(function(obj){
+    var arr=Array.isArray(obj.material)?obj.material:(obj.material?[obj.material]:[]);
+    arr.forEach(function(m){m.userData.base=m.opacity;mats.push(m);});
+  });
+  return mats;
+});
+function setGrpOp(i,op){chMats[i].forEach(function(m){m.opacity=clamp01((m.userData.base||.5)*op);});}
+
+var spineFill=document.getElementById('svc-spine-fill');
+var pill=document.getElementById('svc-pill');
+var tlFill=document.getElementById('svc-tl-fill');
+var pctEl=document.getElementById('svc-pct');
+var epilogue=document.getElementById('svc-epilogue');
+var hint=document.getElementById('svc-hint');
+var dots=[].slice.call(document.querySelectorAll('.svc-dot'));
+var chEls=[];for(var i=0;i<N;i++)chEls.push(document.getElementById('ch'+i));
+
+dots.forEach(function(dot,i){
+  dot.addEventListener('click',function(){
+    var maxSc=document.documentElement.scrollHeight-window.innerHeight;
+    window.scrollTo({top:(i/(N+.5))*maxSc,behavior:'smooth'});
+  });
+});
+
+var tCX=0,tCY=2.5,tCZ=16,tCRX=-0.14,tCRY=0;
+var clock=new THREE.Clock();
+var ticking=false;
+
+function processScroll(){
+  ticking=false;
+  var maxSc=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+  var pct=Math.max(0,Math.min(1,window.scrollY/maxSc));
+  spineFill.style.height=(pct*100)+'%';
+  tlFill.style.width=(pct*100)+'%';
+  pctEl.textContent=Math.round(pct*100).toString().padStart(2,'0')+'%';
+  if(pct>.02)hint.classList.add('hidden');
+  var isEp=pct>.93;
+  epilogue.classList.toggle('show',isEp);
+  var chF=Math.min(N,clamp01(pct/.9)*N);
+  var ch=Math.min(N-1,Math.floor(chF));
+  var t=chF-Math.floor(chF);
+  var st=ss(t);
+  chEls.forEach(function(el,i){if(el)el.classList.toggle('visible',Math.abs(chF-i)<.42&&!isEp);});
+  dots.forEach(function(d,i){d.classList.toggle('active',i===ch);});
+  pill.textContent='Chapter '+CHAPTERS[ch].num+' — '+CHAPTERS[ch].concept;
+  pill.style.color=chColors[ch];
+  pill.style.borderColor=chColors[ch]+'28';
+  var cs=CHAPTERS[ch],cn=CHAPTERS[Math.min(N-1,ch+1)];
+  tCX=lerp(cs.cam.x,cn.cam.x,st);tCY=lerp(cs.cam.y,cn.cam.y,st);tCZ=lerp(cs.cam.z,cn.cam.z,st);
+  tCRX=lerp(cs.cam.rx,cn.cam.rx,st);tCRY=lerp(cs.cam.ry,cn.cam.ry,st);
+  chGroups.forEach(function(grp,i){
+    var dist=Math.abs(chF-i);grp.visible=dist<1.8;
+    if(grp.visible)setGrpOp(i,clamp01(1-Math.max(0,dist-.25)*2.5));
+  });
+  var fA=new THREE.Color(cs.fog),fB=new THREE.Color(cn.fog);
+  scene.fog.color.copy(fA.lerp(fB,st));renderer.setClearColor(scene.fog.color,1);
+  var lcA=new THREE.Color(cs.color),lcB=new THREE.Color(cn.color);
+  keyLight.color.copy(lcA.lerp(lcB,st));
+}
+
+window.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(processScroll);},{passive:true});
+
+function animate(){
+  requestAnimationFrame(animate);
+  var t=clock.getElapsedTime();
+  camera.position.x+=(tCX-camera.position.x)*.055;
+  camera.position.y+=(tCY-camera.position.y)*.055;
+  camera.position.z+=(tCZ-camera.position.z)*.055;
+  camera.rotation.x+=(tCRX-camera.rotation.x)*.042;
+  camera.rotation.y+=(tCRY-camera.rotation.y)*.042;
+  camera.position.y+=Math.sin(t*.38)*.042;
+  camera.position.x+=Math.sin(t*.27)*.02;
+  chGroups.forEach(function(grp){
+    if(!grp.visible)return;
+    grp.traverse(function(obj){
+      if(obj.userData.spinSpeed){obj.rotation[obj.userData.spinAxis||'y']+=obj.userData.spinSpeed;}
+      if(obj.userData.floatAmp){obj.position.y+=Math.sin(t*(obj.userData.floatFreq||.4)+(obj.userData.floatPhase||0))*obj.userData.floatAmp;}
+      if(obj.userData.isNode){var s=.85+Math.sin(t*1.8+(obj.userData.pulsePhase||0))*.15;obj.scale.setScalar(s);}
+    });
+  });
+  renderer.render(scene,camera);
+}
+
+window.addEventListener('resize',function(){
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+},{passive:true});
+
+animate();
+processScroll();
+})();
+</script>
+</body>
+</html>

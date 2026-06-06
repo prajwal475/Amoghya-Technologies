@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Amoghya Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ── CONTACT PAGE ────────────────────────────── */
+.ct-section{padding:160px 56px 80px;max-width:1300px;margin:0 auto}
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start}
+@media (max-width: 900px) {
+  .ct-grid { grid-template-columns: 1fr; gap: 60px; }
+  .ct-section { padding: 120px 24px 60px; }
+  .ct-h { font-size: clamp(36px, 10vw, 56px) !important; text-align: center; }
+  .ct-info { align-items: center; text-align: center; }
+}
+.ct-h{font-family:'Syne',sans-serif;font-size:clamp(52px,7vw,96px);font-weight:800;line-height:.88;letter-spacing:-.026em;text-transform:uppercase;margin-bottom:44px}
+.ct-h .ghost{-webkit-text-stroke:1.5px rgba(240,235,225,.18);color:transparent}
+.ct-info{display:flex;flex-direction:column;gap:28px}
+.ci{display:flex;flex-direction:column;gap:5px}
+.ci-l{font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--gold)}
+.ci:nth-child(1) .ci-l{color:var(--cyan)}
+.ci:nth-child(2) .ci-l{color:var(--purple)}
+.ci:nth-child(3) .ci-l{color:var(--coral)}
+.ci:nth-child(4) .ci-l{color:var(--lime)}
+.ci-v{font-size:15px;color:var(--fg2);transition:color .22s}
+.ci-v:hover{color:var(--fg)}
+
+/* Form */
+.c-form{display:flex;flex-direction:column}
+.c-field{display:flex;flex-direction:column;gap:7px;border-bottom:1px solid var(--bdr);padding:22px 0;transition:border-color .22s}
+.c-field:focus-within{border-color:rgba(0,217,255,.4)}
+.c-lbl{font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--gold)}
+.c-field:nth-child(1) .c-lbl{color:var(--cyan)}
+.c-field:nth-child(2) .c-lbl{color:var(--purple)}
+.c-field:nth-child(3) .c-lbl{color:var(--coral)}
+.c-field:nth-child(4) .c-lbl{color:var(--lime)}
+.c-field:nth-child(5) .c-lbl{color:var(--cyan)}
+.c-field:nth-child(6) .c-lbl{color:var(--purple)}
+.c-field input,.c-field textarea,.c-field select{
+  background:none;border:none;outline:none;
+  font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--fg);
+  width:100%;resize:none;
+}
+.c-field input::placeholder,.c-field textarea::placeholder{color:var(--fg2)}
+.c-field select{color:var(--fg2)}
+.c-field select option{background:var(--bg2);color:var(--fg)}
+
+/* intl-tel-input dark mode overrides */
+.iti { display: block !important; width: 100% !important; }
+.iti__country-list { background-color: var(--bg2); border: 1px solid var(--bdr); color: var(--fg); font-family: 'Space Grotesk', sans-serif; font-size: 14px; white-space: normal; width: max-content; max-width: 300px; }
+.iti__country-name, .iti__dial-code { color: var(--fg); }
+.iti__country.iti__highlight { background-color: rgba(255,255,255,0.05); }
+.iti__selected-flag { padding-left: 0; background: transparent !important; }
+.iti__selected-dial-code { color: var(--fg); font-family: 'Space Grotesk', sans-serif; }
+.iti__arrow { border-top-color: var(--fg2); }
+.iti__arrow--up { border-bottom-color: var(--fg2); }
+
+.c-submit{
+  display:inline-flex;align-items:center;gap:14px;margin-top:40px;align-self:flex-start;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  background:var(--gold);color:var(--bg);border:none;
+  padding:17px 44px;border-radius:2px;cursor:none;
+  transition:background .22s,transform .18s;
+}
+.c-submit:hover{background:var(--gold2);transform:translateY(-2px)}
+.c-submit svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Social bar */
+.social-bar{padding:64px 56px;border-top:1px solid var(--bdr);max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:40px}
+.social-label{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--fg2)}
+.social-links{display:flex;gap:8px}
+.social-link{
+  width:46px;height:46px;border:1px solid var(--bdr);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg2);
+  transition:border-color .22s,color .22s,background .22s;
+}
+.social-link:hover{border-color:var(--gold);color:var(--gold);background:rgba(196,164,107,.06)}
+
+/* Success state */
+.form-success{
+  display:none;flex-direction:column;align-items:flex-start;gap:16px;
+  padding:40px 36px;background:var(--bg2);border:1px solid rgba(196,164,107,.25);
+  border-radius:3px;margin-top:32px;
+}
+.form-success.show{display:flex}
+.fs-icon{width:48px;height:48px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.fs-icon svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fs-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
+.fs-body{font-size:14px;color:var(--fg2);line-height:1.72}
+</style>
+</head>
+<body>
+<div id="page-veil"></div>
+<div id="cur-label"></div>
+<div id="scroll-progress"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Amogh<b>ya</b></a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="process.html">Process</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Start a Project</a>
+</nav>
+
+<!-- CONTACT -->
+<section class="ct-section">
+  <div class="ct-grid">
+
+    <!-- Left: heading + info -->
+    <div class="rv-l">
+      <h1 class="ct-h">
+        Let's<br>
+        <span class="grad-cyan">Build</span><br>
+        Together
+      </h1>
+      <div class="ct-info">
+        <div class="ci">
+          <span class="ci-l">Email</span>
+          <a href="mailto:amoghyatechnologies@gmail.com" class="ci-v">amoghyatechnologies@gmail.com</a>
+        </div>
+        <div class="ci">
+          <span class="ci-l">Studio</span>
+          <span class="ci-v">Amoghya Technologies</span>
+        </div>
+        <div class="ci">
+          <span class="ci-l">Services</span>
+          <span class="ci-v">Web · Apps · AI · Content · Branding</span>
+        </div>
+        <div class="ci">
+          <span class="ci-l">Turnaround</span>
+          <span class="ci-v">We respond within 24 hours</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div class="rv-r">
+      <form class="c-form" id="c-form" novalidate>
+        <div class="c-field">
+          <label class="c-lbl" for="f-name">Your Name</label>
+          <input id="f-name" type="text" placeholder="Enter full name" required>
+        </div>
+        <div class="c-field">
+          <label class="c-lbl" for="f-email">Email Address</label>
+          <input id="f-email" type="email" placeholder="your@email.com" required>
+        </div>
+        <div class="c-field">
+          <label class="c-lbl" for="f-phone">Phone Number</label>
+          <input id="f-phone" type="tel">
+        </div>
+        <div class="c-field">
+          <label class="c-lbl" for="f-svc">Service Required</label>
+          <select id="f-svc" required>
+            <option value="" disabled selected>Select a service</option>
+            <option>Web Development</option>
+            <option>Application Development</option>
+            <option>AI-Powered Solutions</option>
+            <option>Content Production</option>
+            <option>Digital Growth &amp; Marketing</option>
+            <option>Creative Branding</option>
+            <option>Maintenance &amp; Support</option>
+          </select>
+        </div>
+        <div class="c-field" id="f-budget-container" style="display: none;">
+          <label class="c-lbl" for="f-budget">Budget Range</label>
+          <select id="f-budget">
+            <option value="" disabled selected>Select budget range</option>
+            <option>Less than ₹50K</option>
+            <option>₹50K - ₹1L</option>
+            <option>₹1L - ₹2L</option>
+            <option>₹2L - ₹5L</option>
+            <option>More than ₹5L</option>
+          </select>
+        </div>
+        <div class="c-field">
+          <label class="c-lbl" for="f-msg">Project Brief</label>
+          <textarea id="f-msg" rows="4" placeholder="Describe your vision, goals, and timeline..." required></textarea>
+        </div>
+        <button type="submit" class="c-submit" id="c-submit" data-cursor-label="Send">
+          Get Quote
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+
+      <!-- Success message -->
+      <div class="form-success" id="form-success">
+        <div class="fs-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="fs-title">Message Sent!</div>
+        <div class="fs-body">Thank you for reaching out. We'll review your project brief and get back to you within 24 hours.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SWEEP -->
+<div class="sweep-line"></div>
+
+<!-- SOCIALS -->
+<div class="social-bar rv">
+  <span class="social-label">Find us online</span>
+  <div class="social-links">
+    <a href="https://www.instagram.com/amoghyatechnologies?igsh=MWZ1ZGNmamFhNGZtZA==" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">In</a>
+    <a href="https://m.facebook.com/profile.php?id=61590304693775" target="_blank" rel="noopener noreferrer" class="social-link" title="Facebook">Fb</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Amogh<b>ya</b><br>Technologies</div>
+  <div class="f-contact">
+    <span class="f-contact-head"></span>
+    <p>Vyara Amoghya group of Industries</p>
+    <p>Tc palya main road, Bengaluru</p>
+    <p>Karnataka 560036, India</p>
+    <p><a href="tel:+918147279758">+91 81472 79758</a></p>
+    <p><a href="mailto:amoghyatechnologies@gmail.com">amoghyatechnologies@gmail.com</a></p>
+  </div>
+  <div class="f-copy">© 2024 Amoghya Technologies.<br>All rights reserved.</div>
+  <ul class="f-links">
+    <li><a href="https://www.instagram.com/amoghyatechnologies?igsh=MWZ1ZGNmamFhNGZtZA==" target="_blank" rel="noopener noreferrer">Instagram</a></li><li><a href="https://m.facebook.com/profile.php?id=61590304693775" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+  </ul>
+</footer>
+
+<!-- PAGE NAV -->
+<nav class="pg-nav">
+  <a href="process.html" class="pg-arrow prev">
+    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    Process
+  </a>
+  <span></span>
+</nav>
+
+<script src="main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+(function(){
+  const phoneInput = document.querySelector("#f-phone");
+  const iti = window.intlTelInput(phoneInput, {
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    preferredCountries: ["in", "us", "gb", "au"],
+    separateDialCode: true,
+  });
+
+  const form    = document.getElementById('c-form');
+  const success = document.getElementById('form-success');
+  const btn     = document.getElementById('c-submit');
+
+  const svcFld = document.getElementById('f-svc');
+  const budgetContainer = document.getElementById('f-budget-container');
+  svcFld.addEventListener('change', (e) => {
+    const val = e.target.value;
+    if (val === 'Digital Growth & Marketing' || val === 'Creative Branding') {
+      budgetContainer.style.display = 'flex';
+      btn.innerHTML = 'Send Message <svg viewBox=\"0 0 24 24\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg>';
+    } else {
+      budgetContainer.style.display = 'none';
+      btn.innerHTML = 'Get Quote <svg viewBox=\"0 0 24 24\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg>';
+    }
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const phone = iti.getNumber(); // get full international number
+    const service = document.getElementById('f-svc').value;
+    const budget = document.getElementById('f-budget').value;
+    const msg   = document.getElementById('f-msg').value.trim();
+    if(!name || !email || !msg) return;
+    
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, service, budget, msg })
+      });
+
+      if (response.ok) {
+        form.style.display = 'none';
+        success.classList.add('show');
+      } else {
+        alert('Failed to send message. Please try again later.');
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+      }
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred. Please check your network connection.');
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

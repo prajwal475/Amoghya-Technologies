@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Amoghya Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ══════════════════════════════════════════════
+   ABOUT — CINEMATIC EDITION
+══════════════════════════════════════════════ */
+
+/* ── HERO ──────────────────────────────────── */
+.ab-hero{
+  position:relative;height:100vh;min-height:700px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#orb-canvas{
+  position:absolute;inset:0;z-index:1;
+  width:100%;height:100%;
+}
+.ab-hero-grid-bg{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(240,235,225,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(240,235,225,.018) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 75%);
+}
+.ab-hero-glow{
+  position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 55% 55% at 50% 50%,rgba(0,217,255,.035) 0%,transparent 70%);
+}
+.ab-hero-content{
+  position:relative;z-index:10;
+  text-align:center;max-width:920px;padding:0 32px;
+}
+.ab-eyebrow{
+  font-size:10px;letter-spacing:.38em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:32px;
+  opacity:0;transform:translateY(14px);
+}
+.ab-headline{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(38px,6vw,82px);
+  font-weight:800;line-height:1.06;letter-spacing:-.028em;
+}
+.ab-headline .char{
+  display:inline-block;
+  opacity:0;transform:translateY(50px) rotateX(-60deg);
+  filter:blur(8px);
+  transform-style:preserve-3d;
+  transition:none;
+}
+.ab-sub{
+  font-size:16px;color:var(--fg2);margin-top:28px;line-height:1.72;
+  opacity:0;transform:translateY(12px);
+}
+.ab-scroll-hint{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  z-index:10;display:flex;flex-direction:column;align-items:center;gap:10px;
+  opacity:0;
+}
+.ab-scroll-hint span{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--fg2)}
+.ab-scroll-line{
+  width:1px;height:44px;
+  background:linear-gradient(to bottom,var(--fg2),transparent);
+  animation:scrollDrop 2.2s ease-in-out infinite;
+}
+@keyframes scrollDrop{
+  0%{transform:scaleY(0);transform-origin:top;opacity:1}
+  55%{transform:scaleY(1);transform-origin:top}
+  56%{transform-origin:bottom}
+  100%{transform:scaleY(0);transform-origin:bottom;opacity:0}
+}
+
+/* ── BIGTYPE MARQUEE ───────────────────────── */
+.bigtype-section{
+  overflow:hidden;padding:64px 0;
+  border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);
+}
+.bigtype-track{
+  display:flex;white-space:nowrap;
+  will-change:transform;
+}
+.bti{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(52px,8.5vw,114px);
+  font-weight:800;letter-spacing:-.03em;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(240,235,225,.13);
+  padding:0 36px;flex-shrink:0;
+  transition:-webkit-text-stroke-color .35s,color .35s;
+  cursor:default;
+}
+.bti:hover{color:var(--fg);-webkit-text-stroke-color:transparent}
+.bts{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(52px,8.5vw,114px);
+  font-weight:800;color:var(--gold);opacity:.25;
+  padding:0 8px;flex-shrink:0;line-height:1;
+}
+
+/* ── NARRATIVE SCROLL ──────────────────────── */
+.narrative-stack{
+  position:relative;height:100vh;
+}
+.narrative-panel{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 56px 0 80px;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+}
+.narrative-panel.np-active{opacity:1;pointer-events:auto}
+.np-inner{
+  max-width:1100px;width:100%;
+  display:grid;grid-template-columns:1fr .9fr;
+  gap:70px;align-items:center;
+}
+.np-num{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(90px,13vw,170px);
+  font-weight:800;line-height:1;
+  color:transparent;
+  letter-spacing:-.04em;user-select:none;
+}
+.np-label{
+  font-size:10px;letter-spacing:.38em;
+  text-transform:uppercase;margin-bottom:18px;
+}
+.np-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(32px,4.2vw,56px);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-.022em;margin-bottom:22px;
+}
+.np-body{
+  font-size:15px;color:var(--fg2);
+  line-height:1.84;max-width:400px;
+}
+/* Side dots */
+.np-dots{
+  position:absolute;right:44px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:11px;z-index:20;
+}
+.np-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(240,235,225,.15);
+  transition:all .4s cubic-bezier(.16,1,.3,1);cursor:pointer;
+}
+.np-dot.active{background:var(--gold);transform:scale(1.7)}
+.np-spine{
+  position:absolute;right:46px;top:calc(50% - 65px);
+  width:1px;height:130px;background:rgba(240,235,225,.07);z-index:19;
+}
+.np-spine-fill{
+  width:100%;height:0%;
+  background:var(--gold);
+}
+
+/* ── DNA CANVAS ────────────────────────────── */
+.dna-section{
+  padding:130px 56px 160px;
+  max-width:1300px;margin:0 auto;
+}
+.dna-head{margin-bottom:72px}
+#dna-canvas{
+  width:100%;height:480px;display:block;cursor:crosshair;
+  border-radius:4px;
+}
+
+/* ── METRICS ───────────────────────────────── */
+.metrics-section{
+  background:var(--bg2);
+  border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);
+  padding:100px 56px;
+}
+.metrics-inner{
+  max-width:1300px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:40px;
+}
+.met-card{
+  position:relative;padding:40px 28px 40px;
+  border:1px solid var(--bdr);border-radius:2px;
+  overflow:hidden;transition:border-color .35s;
+}
+.met-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 100% 100% at 50% 0%,var(--mc,rgba(0,217,255,.05)) 0%,transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.met-card:hover::after{opacity:1}
+.met-card:nth-child(1){--mc:rgba(0,217,255,.06)}
+.met-card:nth-child(2){--mc:rgba(168,85,247,.06)}
+.met-card:nth-child(3){--mc:rgba(196,164,107,.06)}
+.met-card:nth-child(4){--mc:rgba(74,222,128,.06)}
+.met-card:nth-child(1):hover{border-color:rgba(0,217,255,.22)}
+.met-card:nth-child(2):hover{border-color:rgba(168,85,247,.22)}
+.met-card:nth-child(3):hover{border-color:rgba(196,164,107,.22)}
+.met-card:nth-child(4):hover{border-color:rgba(74,222,128,.22)}
+.met-val{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(52px,5.8vw,78px);
+  font-weight:800;line-height:1;letter-spacing:-.035em;
+  position:relative;z-index:1;
+}
+.met-card:nth-child(1) .met-val{color:var(--cyan)}
+.met-card:nth-child(2) .met-val{color:var(--purple)}
+.met-card:nth-child(3) .met-val{color:var(--gold2)}
+.met-card:nth-child(4) .met-val{color:var(--lime)}
+.met-val sup{font-size:.42em;vertical-align:super;opacity:.8}
+.met-label{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--fg2);margin-top:11px;position:relative;z-index:1;
+}
+.met-bar{
+  position:absolute;bottom:0;left:0;height:2px;width:0%;
+  transition:width 1.6s cubic-bezier(.16,1,.3,1);
+}
+.met-card:nth-child(1) .met-bar{background:var(--cyan)}
+.met-card:nth-child(2) .met-bar{background:var(--purple)}
+.met-card:nth-child(3) .met-bar{background:var(--gold2)}
+.met-card:nth-child(4) .met-bar{background:var(--lime)}
+
+/* ── QUOTE ─────────────────────────────────── */
+.quote-section{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+}
+.q-orb{
+  position:absolute;width:700px;height:700px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(196,164,107,.04) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:qOrb 9s ease-in-out infinite;
+}
+@keyframes qOrb{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-50%,-50%) scale(1.12)}
+}
+.q-rings{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:500px;height:500px;
+}
+.q-ring{
+  position:absolute;top:50%;left:50%;
+  border-radius:50%;border:1px solid rgba(196,164,107,.06);
+  transform:translate(-50%,-50%);
+  animation:qRingExpand 6s ease-out infinite;
+}
+.q-ring:nth-child(1){width:200px;height:200px;animation-delay:0s}
+.q-ring:nth-child(2){width:350px;height:350px;animation-delay:-2s}
+.q-ring:nth-child(3){width:500px;height:500px;animation-delay:-4s}
+@keyframes qRingExpand{
+  0%{opacity:.5;transform:translate(-50%,-50%) scale(.8)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.2)}
+}
+.quote-inner{position:relative;z-index:5;max-width:820px;padding:0 32px}
+.q-mark{
+  font-family:'Syne',sans-serif;font-size:130px;
+  line-height:.55;color:var(--gold);opacity:.1;
+  display:block;margin-bottom:-8px;user-select:none;
+}
+.q-text{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(26px,4vw,52px);
+  font-weight:700;line-height:1.18;letter-spacing:-.02em;
+  opacity:0;transform:translateY(30px);
+}
+.q-text .hl{color:var(--gold);font-style:italic}
+.q-source{
+  font-size:10px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--fg2);margin-top:32px;opacity:0;
+}
+
+/* ── VALUES ────────────────────────────────── */
+.values-cinema{
+  padding:130px 56px;max-width:1300px;margin:0 auto;
+}
+.vc-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1px;background:var(--bdr);margin-top:72px;
+  border:1px solid var(--bdr);
+}
+.vc-card{
+  position:relative;padding:52px 44px;
+  background:var(--bg);overflow:hidden;
+  transition:background .35s;cursor:default;
+}
+.vc-card:hover{background:var(--bg2)}
+.vc-card-glow{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at var(--mx,50%) var(--my,50%),var(--gc,rgba(0,217,255,.06)),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.vc-card:hover .vc-card-glow{opacity:1}
+.vc-icon{
+  font-size:32px;margin-bottom:20px;display:block;
+}
+.vc-num{
+  position:absolute;top:20px;right:28px;
+  font-family:'Syne',sans-serif;font-size:72px;font-weight:800;
+  color:transparent;letter-spacing:-.04em;
+  line-height:1;user-select:none;
+}
+.vc-title{
+  font-family:'Syne',sans-serif;font-size:22px;
+  font-weight:700;margin-bottom:12px;position:relative;
+}
+.vc-body{
+  font-size:13px;color:var(--fg2);line-height:1.82;
+  max-width:380px;position:relative;
+}
+.vc-card:nth-child(1) .vc-num{-webkit-text-stroke:1px rgba(0,217,255,.12)}
+.vc-card:nth-child(2) .vc-num{-webkit-text-stroke:1px rgba(168,85,247,.12)}
+.vc-card:nth-child(3) .vc-num{-webkit-text-stroke:1px rgba(196,164,107,.12)}
+.vc-card:nth-child(4) .vc-num{-webkit-text-stroke:1px rgba(74,222,128,.12)}
+.vc-card:nth-child(1){--gc:rgba(0,217,255,.06)}
+.vc-card:nth-child(2){--gc:rgba(168,85,247,.06)}
+.vc-card:nth-child(3){--gc:rgba(196,164,107,.06)}
+.vc-card:nth-child(4){--gc:rgba(74,222,128,.06)}
+
+/* ── ENDING ────────────────────────────────── */
+.ending-section{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+}
+.ending-canvas{
+  position:absolute;inset:0;z-index:0;
+  pointer-events:none;
+}
+.ending-inner{
+  position:relative;z-index:5;
+  max-width:900px;padding:0 32px;
+}
+.ending-pre{
+  font-size:10px;letter-spacing:.38em;text-transform:uppercase;
+  color:var(--fg2);margin-bottom:32px;
+  opacity:0;transform:translateY(12px);
+}
+.ending-text{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(34px,5.8vw,76px);
+  font-weight:800;line-height:1.06;letter-spacing:-.026em;
+  opacity:0;transform:translateY(28px);
+}
+.ending-text .hl{color:var(--cyan)}
+.ending-cta{
+  display:inline-block;margin-top:52px;
+  padding:14px 44px;
+  border:1px solid var(--bdr2);border-radius:2px;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--fg2);transition:all .3s;
+  opacity:0;transform:translateY(12px);
+}
+.ending-cta:hover{color:var(--fg);border-color:var(--gold);background:rgba(196,164,107,.06)}
+
+/* ── ZOOM-FROM-BLACK TRANSITION ────────────── */
+#ab-burst{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,217,255,.95) 0%,rgba(0,217,255,.4) 25%,rgba(168,85,247,.15) 55%,transparent 75%);
+  z-index:25;pointer-events:none;
+  will-change:transform,opacity;
+}
+.ab-hero-grid-bg{
+  transform:scale(1.22);filter:blur(14px);opacity:0;
+  transition:none;
+}
+.ab-hero-glow{
+  opacity:0;transition:none;
+}
+#orb-canvas{
+  opacity:0;transform:scale(0.8);
+  transition:none;
+}
+/* Scan-line sweep */
+#ab-scanline{
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,217,255,.6),transparent);
+  z-index:22;pointer-events:none;
+  transform:translateY(-4px);opacity:0;
+}
+
+/* ── VALUE CARD IMAGES ──────────────────────── */
+.vc-card{
+  min-height:340px;
+}
+.vc-img{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:52%;
+  background-size:cover;background-position:center;
+  z-index:0;
+  transition:transform .6s cubic-bezier(.16,1,.3,1);
+}
+.vc-card:hover .vc-img{transform:scale(1.05)}
+.vc-img::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,var(--bg) 0%,rgba(7,7,7,.55) 100%);
+  z-index:1;
+}
+.vc-card-inner{position:relative;z-index:2}
+
+
+/* ── NARRATIVE PANEL VISUALS ────────────────── */
+.np-visual{
+  position:relative;
+  height:440px;border-radius:4px;overflow:hidden;
+  flex-shrink:0;
+}
+.np-vis-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  filter:brightness(.82) saturate(1.15);
+  transition:transform .7s cubic-bezier(.16,1,.3,1);
+  display:block;
+}
+.narrative-panel.np-active .np-vis-img{
+  transform:scale(1.04);
+}
+.np-visual::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(120deg,rgba(7,7,7,.55) 0%,transparent 60%);
+  pointer-events:none;
+}
+.np-vis-num{
+  position:absolute;bottom:14px;right:18px;
+  font-family:'Syne',sans-serif;
+  font-size:72px;font-weight:800;
+  color:transparent;letter-spacing:-.04em;line-height:1;
+  pointer-events:none;z-index:2;
+}
+.np-vis-border{
+  position:absolute;inset:0;border-radius:4px;
+  border:1px solid rgba(240,235,225,.06);
+  transition:border-color .5s;pointer-events:none;z-index:3;
+}
+.narrative-panel.np-active .np-vis-border{
+  border-color:rgba(var(--np-rgb,0,217,255),.18);
+  box-shadow:0 0 40px rgba(var(--np-rgb,0,217,255),.07);
+}
+
+
+/* ══ PARALLAX AMBIENT LAYERS ════════════════ */
+.plx-orb{
+  position:absolute;border-radius:50%;pointer-events:none;will-change:transform;
+  mix-blend-mode:screen;
+}
+.dna-section{ position:relative;overflow:hidden; }
+.dna-plx-1{
+  width:380px;height:380px;
+  top:-80px;right:-100px;
+  background:radial-gradient(circle,rgba(0,217,255,.025) 0%,transparent 70%);
+}
+.dna-plx-2{
+  width:240px;height:240px;
+  bottom:20px;left:-60px;
+  background:radial-gradient(circle,rgba(168,85,247,.03) 0%,transparent 70%);
+}
+.metrics-section{ position:relative;overflow:hidden; }
+.met-plx-1{
+  width:600px;height:600px;
+  top:-200px;left:50%;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(0,217,255,.018) 0%,transparent 65%);
+}
+.values-cinema{ position:relative;overflow:hidden; }
+.val-plx-1{
+  width:500px;height:500px;
+  top:-60px;right:-140px;
+  background:radial-gradient(circle,rgba(196,164,107,.03) 0%,transparent 70%);
+}
+.val-plx-2{
+  width:300px;height:300px;
+  bottom:-40px;left:-80px;
+  background:radial-gradient(circle,rgba(74,222,128,.025) 0%,transparent 70%);
+}
+/* Parallax depth on hero scroll-out */
+.ab-hero-content{ will-change:transform; }
+#orb-canvas{ will-change:transform,opacity; }
+/* Make value card vc-img parallax-ready */
+.vc-img{ will-change:background-position; background-attachment:local; }
+/* Narrative image subtle entrance */
+.np-vis-img{ will-change:transform; }
+/* Quote section extra depth layers */
+.quote-section{ overflow:hidden; }
+.q-plx-lines{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:
+    repeating-linear-gradient(
+      -55deg,
+      transparent,transparent 90px,
+      rgba(196,164,107,.012) 90px,rgba(196,164,107,.012) 91px
+    );
+  will-change:transform;
+}
+/* Ending parallax depth */
+.ending-section{ overflow:hidden; }
+
+
+@media (max-width: 900px) {
+  .ab-hero-h { font-size: clamp(38px, 10vw, 56px) !important; }
+  .ab-hero-h .ghost { -webkit-text-stroke: 1px rgba(240,235,225,.2); }
+  .np-bg-text { font-size: clamp(52px, 15vw, 82px) !important; white-space: normal !important; text-align: center; line-height: 1.1; }
+  .met-val { font-size: clamp(44px, 12vw, 68px) !important; }
+  .vc-title { font-size: clamp(32px, 8vw, 46px) !important; }
+  .q-text { font-size: clamp(28px, 6vw, 40px) !important; }
+  .ct-h { font-size: clamp(36px, 9vw, 52px) !important; }
+  .ab-sub { max-width: 100% !important; margin-left: auto; margin-right: auto; text-align: center; }
+  .np-inner { max-width: 100% !important; }
+  .dna-row { flex-direction: column !important; gap: 20px !important; text-align: center; }
+  .dna-right { text-align: center !important; }
+}
+</style>
+</head>
+<body>
+<div id="page-veil"></div>
+<div id="cur-label"></div>
+<div id="scroll-progress"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Amogh<b>ya</b></a>
+  <ul class="nav-links">
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="process.html">Process</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Start a Project</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     §1  CINEMATIC HERO
+════════════════════════════════════════════ -->
+<section class="ab-hero">
+  <div class="ab-hero-grid-bg"></div>
+  <div id="ab-burst"></div>
+  <div id="ab-scanline"></div>
+  <div class="ab-hero-glow"></div>
+  <canvas id="orb-canvas"></canvas>
+
+  <div class="ab-hero-content">
+    <div class="ab-eyebrow" id="ab-eyebrow">Amoghya Technologies — Who We Are</div>
+    <h1 class="ab-headline" id="ab-headline">
+      <span class="ab-line" data-line="0">We don't build websites.</span><br>
+      <span class="ab-line" data-line="1">We <em style="color:var(--cyan);font-style:normal">engineer</em></span><br>
+      <span class="ab-line" data-line="2">digital <em style="color:var(--gold);font-style:normal">experiences.</em></span>
+    </h1>
+    <p class="ab-sub" id="ab-sub">A creative technology company obsessed with precision,<br>
+    aesthetics, and the kind of craft that makes users stop and stare.</p>
+  </div>
+
+  <div class="ab-scroll-hint" id="ab-scroll-hint">
+    <div class="ab-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §2  BIGTYPE MARQUEE
+════════════════════════════════════════════ -->
+<div class="bigtype-section" aria-hidden="true">
+  <div class="bigtype-track" id="bt-track">
+    <span class="bti">FUTURE</span><span class="bts">·</span>
+    <span class="bti">INNOVATION</span><span class="bts">·</span>
+    <span class="bti">EXPERIENCE</span><span class="bts">·</span>
+    <span class="bti">INTELLIGENCE</span><span class="bts">·</span>
+    <span class="bti">PRECISION</span><span class="bts">·</span>
+    <span class="bti">DESIGN</span><span class="bts">·</span>
+    <span class="bti">FUTURE</span><span class="bts">·</span>
+    <span class="bti">INNOVATION</span><span class="bts">·</span>
+    <span class="bti">EXPERIENCE</span><span class="bts">·</span>
+    <span class="bti">INTELLIGENCE</span><span class="bts">·</span>
+    <span class="bti">PRECISION</span><span class="bts">·</span>
+    <span class="bti">DESIGN</span><span class="bts">·</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     §3  SCROLL NARRATIVE
+════════════════════════════════════════════ -->
+<div id="narrative-wrap">
+  <div class="narrative-stack" id="narrative-stack">
+
+    <!-- Panel 01 – Vision -->
+    <div class="narrative-panel np-active" id="np-0">
+      <div class="np-inner">
+        <div>
+          <div class="np-label" style="color:var(--cyan)">Chapter 01 — Vision</div>
+          <h2 class="np-title">We see the web<br>differently.</h2>
+          <p class="np-body">To us, every screen is a canvas. Every interaction is a conversation. We were founded on the belief that digital products should create emotional responses, not just transactional ones. Vision is not where you want to go — it's the quality of how you see the world right now.</p>
+        </div>
+        <div class="np-visual" style="--np-rgb:0,217,255">
+        <img class="np-vis-img" src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Vision">
+        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(0,217,255,.35)">01</div>
+        <div class="np-vis-border"></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- Panel 02 – Innovation -->
+    <div class="narrative-panel" id="np-1">
+      <div class="np-inner">
+        <div>
+          <div class="np-label" style="color:var(--purple)">Chapter 02 — Innovation</div>
+          <h2 class="np-title">We push past<br>the possible.</h2>
+          <p class="np-body">The tools of tomorrow are available today. We experiment relentlessly — with AI, with motion, with generative systems — not for novelty, but because genuine innovation is how premium brands stay relevant in a world moving faster every year.</p>
+        </div>
+        <div class="np-visual" style="--np-rgb:168,85,247">
+        <img class="np-vis-img" src="https://images.pexels.com/photos/6491965/pexels-photo-6491965.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Innovation">
+        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(168,85,247,.35)">02</div>
+        <div class="np-vis-border"></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- Panel 03 – Design -->
+    <div class="narrative-panel" id="np-2">
+      <div class="np-inner">
+        <div>
+          <div class="np-label" style="color:var(--gold)">Chapter 03 — Design</div>
+          <h2 class="np-title">Design is the<br>strategy.</h2>
+          <p class="np-body">Design is not decoration. It is the system through which complexity becomes clarity, and clarity becomes trust. Every layout, typographic choice, and color decision is intentional. Our philosophy: if it doesn't feel inevitable, it isn't finished.</p>
+        </div>
+        <div class="np-visual" style="--np-rgb:196,164,107">
+        <img class="np-vis-img" src="https://images.pexels.com/photos/8108682/pexels-photo-8108682.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Design">
+        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(196,164,107,.35)">03</div>
+        <div class="np-vis-border"></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- Panel 04 – Technology -->
+    <div class="narrative-panel" id="np-3">
+      <div class="np-inner">
+        <div>
+          <div class="np-label" style="color:var(--lime)">Chapter 04 — Technology</div>
+          <h2 class="np-title">Built for<br>performance.</h2>
+          <p class="np-body">Beautiful products that cannot scale are prototypes. We architect technology stacks that handle growth gracefully — from the first user to the millionth. Performance, security, and reliability are not features. They are foundations.</p>
+        </div>
+        <div class="np-visual" style="--np-rgb:74,222,128">
+        <img class="np-vis-img" src="https://images.pexels.com/photos/12081657/pexels-photo-12081657.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Technology">
+        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(74,222,128,.35)">04</div>
+        <div class="np-vis-border"></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- Panel 05 – Future -->
+    <div class="narrative-panel" id="np-4">
+      <div class="np-inner">
+        <div>
+          <div class="np-label" style="color:var(--cyan)">Chapter 05 — Future</div>
+          <h2 class="np-title">The future is<br>already here.</h2>
+          <p class="np-body">AI is not coming — it arrived. Spatial computing is not science fiction — it's in production. We help brands navigate this acceleration by building products that don't just exist in the present, but are architected for the next decade of digital evolution.</p>
+        </div>
+        <div class="np-visual" style="--np-rgb:0,217,255">
+        <img class="np-vis-img" src="https://images.pexels.com/photos/8134609/pexels-photo-8134609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Future">
+        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(0,217,255,.35)">05</div>
+        <div class="np-vis-border"></div>
+      </div>
+      </div>
+    </div>
+
+    <!-- Dots + spine -->
+    <div class="np-dots" id="np-dots">
+      <div class="np-dot active" data-i="0"></div>
+      <div class="np-dot" data-i="1"></div>
+      <div class="np-dot" data-i="2"></div>
+      <div class="np-dot" data-i="3"></div>
+      <div class="np-dot" data-i="4"></div>
+    </div>
+    <div class="np-spine"><div class="np-spine-fill" id="np-spine-fill"></div></div>
+
+  </div><!-- .narrative-stack -->
+</div><!-- #narrative-wrap -->
+
+
+
+
+<!-- ═══════════════════════════════════════════
+     §4  COMPANY DNA
+════════════════════════════════════════════ -->
+<section class="dna-section">
+  <div class="plx-orb dna-plx-1" id="dna-plx-1"></div>
+  <div class="plx-orb dna-plx-2" id="dna-plx-2"></div>
+  <div class="dna-head">
+    <div class="sec-tag rv">Company DNA</div>
+    <h2 class="sec-h rv">The <span class="ghost">Architecture</span><br>of Our Values</h2>
+  </div>
+  <canvas id="dna-canvas"></canvas>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §5  METRICS
+════════════════════════════════════════════ -->
+<section class="metrics-section">
+  <div class="plx-orb met-plx-1" id="met-plx-1"></div>
+  <div class="metrics-inner">
+    <div class="met-card rv d1">
+      <div class="met-val"><span class="met-num" data-target="50">0</span><sup>+</sup></div>
+      <div class="met-label">Projects Delivered</div>
+      <div class="met-bar"></div>
+    </div>
+    <div class="met-card rv d2">
+      <div class="met-val"><span class="met-num" data-target="30">0</span><sup>+</sup></div>
+      <div class="met-label">Global Clients</div>
+      <div class="met-bar"></div>
+    </div>
+    <div class="met-card rv d3">
+      <div class="met-val"><span class="met-num" data-target="12">0</span><sup>+</sup></div>
+      <div class="met-label">AI Solutions Built</div>
+      <div class="met-bar"></div>
+    </div>
+    <div class="met-card rv d4">
+      <div class="met-val"><span class="met-num" data-target="100">0</span><sup>%</sup></div>
+      <div class="met-label">Client Satisfaction</div>
+      <div class="met-bar"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §6  PHILOSOPHY QUOTE
+════════════════════════════════════════════ -->
+<section class="quote-section">
+  <div class="q-orb"></div>
+  <div class="q-plx-lines" id="q-plx-lines"></div>
+  <div class="q-rings">
+    <div class="q-ring"></div>
+    <div class="q-ring"></div>
+    <div class="q-ring"></div>
+  </div>
+  <div class="quote-inner" id="quote-block">
+    <span class="q-mark">"</span>
+    <p class="q-text" id="q-text">Technology without <span class="hl">emotion</span><br>is forgettable.</p>
+    <p class="q-source" id="q-source">— Amoghya Technologies &nbsp;·&nbsp; Design Philosophy</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §7  VALUES GRID (cinematic)
+════════════════════════════════════════════ -->
+<section class="values-cinema">
+  <div class="plx-orb val-plx-1" id="val-plx-1"></div>
+  <div class="plx-orb val-plx-2" id="val-plx-2"></div>
+  <div>
+    <div class="sec-tag rv">Our Values</div>
+    <h2 class="sec-h rv">What We <span class="ghost">Stand For</span></h2>
+  </div>
+  <div class="vc-grid">
+    <div class="vc-card rv d1" data-cursor-label="Quality">
+      <div class="vc-card-glow"></div>
+      <div class="vc-img" style="background-image:url('https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1')"></div>
+      <div class="vc-card-inner">
+        <div class="vc-num">01</div>
+        <span class="vc-icon">◈</span>
+        <div class="vc-title">Premium Quality</div>
+        <div class="vc-body">We never settle for good enough. Every pixel, every line of code, every frame of video is crafted to the highest standard of craft.</div>
+      </div>
+    </div>
+    <div class="vc-card rv d2" data-cursor-label="Future">
+      <div class="vc-card-glow"></div>
+      <div class="vc-img" style="background-image:url('https://images.pexels.com/photos/7562087/pexels-photo-7562087.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1')"></div>
+      <div class="vc-card-inner">
+        <div class="vc-num">02</div>
+        <span class="vc-icon">◉</span>
+        <div class="vc-title">Future-Focused</div>
+        <div class="vc-body">We stay ahead of technology trends so our clients benefit from solutions that remain relevant and powerful for years to come.</div>
+      </div>
+    </div>
+    <div class="vc-card rv d3" data-cursor-label="Partner">
+      <div class="vc-card-glow"></div>
+      <div class="vc-img" style="background-image:url('https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1')"></div>
+      <div class="vc-card-inner">
+        <div class="vc-num">03</div>
+        <span class="vc-icon">◎</span>
+        <div class="vc-title">Client Partnership</div>
+        <div class="vc-body">We treat every project as a partnership. Your success is our success — we are invested in your outcomes, not just deliverables.</div>
+      </div>
+    </div>
+    <div class="vc-card rv d4" data-cursor-label="Innovate">
+      <div class="vc-card-glow"></div>
+      <div class="vc-img" style="background-image:url('https://images.pexels.com/photos/8386437/pexels-photo-8386437.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1')"></div>
+      <div class="vc-card-inner">
+        <div class="vc-num">04</div>
+        <span class="vc-icon">◆</span>
+        <div class="vc-title">Bold Innovation</div>
+        <div class="vc-body">We embrace new ideas, experimental technologies, and unconventional thinking to create solutions that truly stand out in the market.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §8  CINEMATIC ENDING
+════════════════════════════════════════════ -->
+<section class="ending-section">
+  <canvas class="ending-canvas" id="ending-canvas"></canvas>
+  <div class="ending-inner" id="ending-inner">
+    <p class="ending-pre" id="ending-pre">What we believe</p>
+    <h2 class="ending-text" id="ending-text">
+      The future is <span class="hl">designed</span><br>before it is built.
+    </h2>
+    <a href="contact.html" class="ending-cta" id="ending-cta" data-cursor-label="Start">
+      Start Building With Us
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Amogh<b>ya</b><br>Technologies</div>
+  <div class="f-contact">
+    <span class="f-contact-head"></span>
+    <p>Vyara Amoghya group of Industries</p>
+    <p>Tc palya main road, Bengaluru</p>
+    <p>Karnataka 560036, India</p>
+    <p><a href="tel:+918147279758">+91 81472 79758</a></p>
+    <p><a href="mailto:amoghyatechnologies@gmail.com">amoghyatechnologies@gmail.com</a></p>
+  </div>
+  <div class="f-copy">© 2024 Amoghya Technologies.<br>All rights reserved.</div>
+  <ul class="f-links">
+    <li><a href="https://www.instagram.com/amoghyatechnologies?igsh=MWZ1ZGNmamFhNGZtZA==" target="_blank" rel="noopener noreferrer">Instagram</a></li><li><a href="https://m.facebook.com/profile.php?id=61590304693775" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+  </ul>
+</footer>
+
+<!-- PAGE NAV -->
+<nav class="pg-nav">
+  <a href="index.html" class="pg-arrow prev">
+    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    Home
+  </a>
+  <a href="services.html" class="pg-arrow next">
+    Services
+    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</nav>
+
+<!-- ═════════ SCRIPTS ═════════ -->
+<script src="main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+'use strict';
+if(typeof gsap === 'undefined') return;
+gsap.registerPlugin(ScrollTrigger);
+
+/* ════════════════════════════════════════════
+   §A  THREE.JS ORB
+════════════════════════════════════════════ */
+(function initOrb(){
+  var canvas = document.getElementById('orb-canvas');
+  if(!canvas || typeof THREE === 'undefined') return;
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+  camera.position.z = 5;
+
+  function resize(){
+    var w = canvas.parentElement.offsetWidth;
+    var h = canvas.parentElement.offsetHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Outer icosahedron — cyan wireframe
+  var g1 = new THREE.IcosahedronGeometry(1.7, 1);
+  var m1 = new THREE.MeshBasicMaterial({ color:0x00D9FF, wireframe:true, transparent:true, opacity:0.07 });
+  var mesh1 = new THREE.Mesh(g1, m1);
+  scene.add(mesh1);
+
+  // Mid sphere — purple
+  var g2 = new THREE.IcosahedronGeometry(1.15, 2);
+  var m2 = new THREE.MeshBasicMaterial({ color:0xA855F7, wireframe:true, transparent:true, opacity:0.06 });
+  var mesh2 = new THREE.Mesh(g2, m2);
+  scene.add(mesh2);
+
+  // Inner dense core — gold
+  var g3 = new THREE.IcosahedronGeometry(0.62, 3);
+  var m3 = new THREE.MeshBasicMaterial({ color:0xC4A46B, wireframe:true, transparent:true, opacity:0.22 });
+  var mesh3 = new THREE.Mesh(g3, m3);
+  scene.add(mesh3);
+
+  // Orbiting particles
+  var PC = 150;
+  var pGeo = new THREE.BufferGeometry();
+  var pPos = new Float32Array(PC * 3);
+  var pRad=[],pSpd=[],pPhase=[],pTilt=[];
+  for(var i=0;i<PC;i++){
+    pRad.push(1.9 + Math.random()*1.5);
+    pSpd.push(0.004 + Math.random()*0.014);
+    pPhase.push(Math.random()*Math.PI*2);
+    pTilt.push((Math.random()-0.5)*Math.PI);
+    pPos[i*3]=0; pPos[i*3+1]=0; pPos[i*3+2]=0;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+  var pMat = new THREE.PointsMaterial({ color:0x00D9FF, size:0.022, transparent:true, opacity:0.55 });
+  var pts = new THREE.Points(pGeo, pMat);
+  scene.add(pts);
+
+  // Second particle ring — gold
+  var PC2 = 80;
+  var pGeo2 = new THREE.BufferGeometry();
+  var pPos2 = new Float32Array(PC2*3);
+  var pRad2=[],pSpd2=[],pPhase2=[],pTilt2=[];
+  for(var j=0;j<PC2;j++){
+    pRad2.push(1.5 + Math.random()*0.8);
+    pSpd2.push(-0.006 - Math.random()*0.01);
+    pPhase2.push(Math.random()*Math.PI*2);
+    pTilt2.push((Math.random()-0.5)*0.6);
+    pPos2[j*3]=0; pPos2[j*3+1]=0; pPos2[j*3+2]=0;
+  }
+  pGeo2.setAttribute('position', new THREE.BufferAttribute(pPos2,3));
+  var pMat2 = new THREE.PointsMaterial({ color:0xC4A46B, size:0.018, transparent:true, opacity:0.4 });
+  var pts2 = new THREE.Points(pGeo2, pMat2);
+  scene.add(pts2);
+
+  var mx=0,my=0,smx=0,smy=0;
+  document.addEventListener('mousemove', function(e){
+    mx = (e.clientX/innerWidth  - 0.5)*2;
+    my = (e.clientY/innerHeight - 0.5)*2;
+  });
+
+  var t=0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.007;
+    smx += (mx - smx)*0.038;
+    smy += (my - smy)*0.038;
+
+    mesh1.rotation.x = smy*0.38 + t*0.14;
+    mesh1.rotation.y = smx*0.38 + t*0.20;
+    mesh2.rotation.x = -smy*0.28 - t*0.17;
+    mesh2.rotation.y = -smx*0.28 + t*0.26;
+    mesh3.rotation.x = smy*0.5  + t*0.32;
+    mesh3.rotation.y = smx*0.5  - t*0.40;
+
+    var pos1 = pGeo.attributes.position.array;
+    for(var n=0;n<PC;n++){
+      var ang = pPhase[n] + t*pSpd[n]*80;
+      var r   = pRad[n];
+      var tlt = pTilt[n];
+      pos1[n*3]   = r*Math.cos(ang)*Math.cos(tlt);
+      pos1[n*3+1] = r*Math.sin(tlt)*0.55 + Math.sin(ang*0.6)*0.25;
+      pos1[n*3+2] = r*Math.sin(ang)*Math.cos(tlt);
+    }
+    pGeo.attributes.position.needsUpdate = true;
+
+    var pos2 = pGeo2.attributes.position.array;
+    for(var n2=0;n2<PC2;n2++){
+      var ang2 = pPhase2[n2] + t*pSpd2[n2]*80;
+      var r2   = pRad2[n2];
+      var tlt2 = pTilt2[n2];
+      pos2[n2*3]   = r2*Math.cos(ang2)*Math.cos(tlt2);
+      pos2[n2*3+1] = r2*Math.sin(tlt2)*0.7 + Math.sin(ang2*0.8)*0.2;
+      pos2[n2*3+2] = r2*Math.sin(ang2)*Math.cos(tlt2);
+    }
+    pGeo2.attributes.position.needsUpdate = true;
+
+    // Breathing scale
+    var br = 1 + Math.sin(t*0.75)*0.04;
+    mesh1.scale.setScalar(br);
+    mesh3.scale.setScalar(1 + Math.sin(t*1.1+1)*0.07);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ════════════════════════════════════════════
+   §B  ZOOM-FROM-BLACK CINEMATIC ENTRANCE
+════════════════════════════════════════════ */
+(function initHeroText(){
+  var eyebrow  = document.getElementById('ab-eyebrow');
+  var lines2   = document.querySelectorAll('.ab-line');
+  var sub      = document.getElementById('ab-sub');
+  var hint     = document.getElementById('ab-scroll-hint');
+  var gridBg   = document.querySelector('.ab-hero-grid-bg');
+  var heroBg   = document.querySelector('.ab-hero-glow');
+  var orbCvs   = document.getElementById('orb-canvas');
+  var burst    = document.getElementById('ab-burst');
+  var scanline = document.getElementById('ab-scanline');
+
+  // Split each line into individual .char spans
+  lines2.forEach(function(line){
+    var nodes = Array.from(line.childNodes);
+    line.innerHTML = '';
+    nodes.forEach(function(node){
+      if(node.nodeType === 3){
+        node.textContent.split('').forEach(function(ch){
+          if(ch === ' '){
+            line.appendChild(document.createTextNode(' '));
+          } else {
+            var s = document.createElement('span');
+            s.className = 'char';
+            s.textContent = ch;
+            line.appendChild(s);
+          }
+        });
+      } else if(node.nodeType === 1){
+        var wrapper = node.cloneNode(false);
+        wrapper.innerHTML = '';
+        node.textContent.split('').forEach(function(ch){
+          if(ch === ' '){
+            wrapper.appendChild(document.createTextNode(' '));
+          } else {
+            var s = document.createElement('span');
+            s.className = 'char';
+            s.style.color = 'inherit';
+            s.textContent = ch;
+            wrapper.appendChild(s);
+          }
+        });
+        line.appendChild(wrapper);
+      }
+    });
+  });
+
+  var allChars = document.querySelectorAll('.ab-headline .char');
+
+  // ── MASTER CINEMATIC TIMELINE ──────────────
+  // Phase 1: cyan point ignites at screen center
+  // Phase 2: scan-line sweeps down (techy)
+  // Phase 3: burst expands — universe opening
+  // Phase 4: grid + glow zoom in from scale 1.22
+  // Phase 5: orb materialises from scale 0.8
+  // Phase 6: text chars cascade in
+  gsap.set(burst, { scale:0.001, opacity:0 });
+
+  var masterTl = gsap.timeline({ delay: 0.5 });
+  masterTl
+  // ignite point
+  .to(burst, { scale:0.05, opacity:1, duration:0.2, ease:'power4.out' })
+  .to(burst, { scale:0.18, opacity:1, duration:0.22, ease:'power2.out' })
+  // scan-line drops simultaneously
+  .to(scanline, { opacity:1, y:'100vh', duration:0.5, ease:'none' }, '<0.08')
+  // burst explodes outward and fades
+  .to(burst, { scale:30, opacity:0, duration:0.9, ease:'power2.in' }, '-=0.22')
+  // background zooms in as burst clears
+  .to(gridBg, { scale:1, filter:'blur(0px)', opacity:1, duration:1.1, ease:'power3.out' }, '-=0.62')
+  .to(heroBg, { opacity:1, duration:0.9, ease:'power2.out' }, '<')
+  // orb scales up
+  .to(orbCvs, { scale:1, opacity:1, duration:1.0, ease:'back.out(1.3)' }, '-=0.75')
+  // eyebrow
+  .to(eyebrow, { y:0, opacity:1, duration:0.65, ease:'power3.out' }, '-=0.55')
+  // chars cascade in
+  .to(allChars, {
+    y:0, opacity:1, rotateX:0, filter:'blur(0px)',
+    duration:0.6, ease:'power3.out',
+    stagger:{ amount:1.0, from:'start' }
+  }, '-=0.3')
+  // sub + hint
+  .to(sub,  { y:0, opacity:1, duration:0.7, ease:'power3.out' }, '-=0.28')
+  .to(hint, { opacity:1, duration:0.5, ease:'power2.out' }, '-=0.18');
+})();
+
+/* ════════════════════════════════════════════
+   §C  BIGTYPE MARQUEE
+════════════════════════════════════════════ */
+(function initMarquee(){
+  var track = document.getElementById('bt-track');
+  if(!track) return;
+  var x = 0;
+  var half = 0;
+  function getHalf(){ half = track.scrollWidth / 2; }
+  getHalf();
+  window.addEventListener('resize', getHalf);
+  function tick(){
+    x -= 0.55;
+    if(Math.abs(x) >= half) x = 0;
+    track.style.transform = 'translateX('+x+'px)';
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ════════════════════════════════════════════
+   §D  NARRATIVE SCROLL STACK
+════════════════════════════════════════════ */
+(function initNarrative(){
+  var stack  = document.getElementById('narrative-stack');
+  var panels = gsap.utils.toArray('.narrative-panel');
+  var dots   = document.querySelectorAll('.np-dot');
+  var spineFill = document.getElementById('np-spine-fill');
+  var N = panels.length;
+  var current = 0;
+
+  function setActive(idx){
+    if(idx === current) return;
+    current = idx;
+    panels.forEach(function(p, i){
+      gsap.to(p, {
+        opacity: i===idx ? 1 : 0,
+        duration: 0.55,
+        ease: 'power2.inOut',
+        onStart: function(){ if(i===idx){ p.classList.add('np-active'); p.style.pointerEvents='auto'; }},
+        onComplete: function(){ if(i!==idx){ p.classList.remove('np-active'); p.style.pointerEvents='none'; }}
+      });
+    });
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===idx); });
+  }
+
+  var tl = gsap.timeline({ defaults:{ ease:'none', duration:1 } });
+  for(var i=0;i<N-1;i++) tl.to({},{});
+
+  ScrollTrigger.create({
+    id: 'narrative-st',
+    trigger: stack,
+    pin: true,
+    start: 'top top',
+    end: '+=' + (N-1)*280 + 'vh',
+    scrub: 1.4,
+    animation: tl,
+    onUpdate: function(self){
+      var pct = self.progress;
+      var idx = Math.min(N-1, Math.floor(pct*N + 0.002));
+      setActive(idx);
+      if(spineFill) spineFill.style.height = (pct*100).toFixed(2)+'%';
+    }
+  });
+})();
+
+/* ════════════════════════════════════════════
+   §E  DNA NEURAL NETWORK CANVAS
+════════════════════════════════════════════ */
+(function initDNA(){
+  var canvas = document.getElementById('dna-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W=0, H=0, dpr=Math.min(devicePixelRatio,2);
+
+  function resize(){
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr,dpr);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var NODES = [
+    { label:'Innovation',   color:'#00D9FF', rx:0.5,  ry:0.46, r:30 },
+    { label:'Precision',    color:'#A855F7', rx:0.18, ry:0.22, r:22 },
+    { label:'Creativity',   color:'#C4A46B', rx:0.82, ry:0.20, r:22 },
+    { label:'Intelligence', color:'#4ADE80', rx:0.14, ry:0.70, r:22 },
+    { label:'Scalability',  color:'#FF6B6B', rx:0.86, ry:0.72, r:22 },
+    { label:'Performance',  color:'#E8C98A', rx:0.5,  ry:0.86, r:22 }
+  ];
+  var EDGES = [[0,1],[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[2,4],[3,5],[4,5],[1,5],[2,3]];
+
+  var mx=-999, my=-999;
+  canvas.addEventListener('mousemove', function(e){
+    var r = canvas.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+  });
+  canvas.addEventListener('mouseleave', function(){ mx=-999; my=-999; });
+
+  var t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Animated positions
+    var pos = NODES.map(function(n,i){
+      return {
+        x: n.rx*W + Math.sin(t*0.35+i*1.2)*11,
+        y: n.ry*H + Math.cos(t*0.28+i*0.95)*9
+      };
+    });
+
+    // Edges
+    EDGES.forEach(function(e){
+      var a=e[0], b=e[1];
+      var pa=pos[a], pb=pos[b];
+      var pulse = 0.4 + 0.6*Math.abs(Math.sin(t*1.2 + a*0.8 + b*0.5));
+      var grad = ctx.createLinearGradient(pa.x,pa.y,pb.x,pb.y);
+      grad.addColorStop(0, NODES[a].color+'33');
+      grad.addColorStop(0.5, NODES[a].color+'88');
+      grad.addColorStop(1, NODES[b].color+'33');
+      ctx.beginPath();
+      ctx.moveTo(pa.x,pa.y);
+      ctx.lineTo(pb.x,pb.y);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1 + pulse;
+      ctx.stroke();
+
+      // Traveling signal dot
+      var travel = ((t*0.35 + a*0.6 + b*0.4) % 1 + 1) % 1;
+      var tx = pa.x+(pb.x-pa.x)*travel;
+      var ty = pa.y+(pb.y-pa.y)*travel;
+      ctx.beginPath();
+      ctx.arc(tx,ty,2.8,0,Math.PI*2);
+      ctx.fillStyle = NODES[a].color+'BB';
+      ctx.fill();
+    });
+
+    // Nodes
+    NODES.forEach(function(n,i){
+      var p = pos[i];
+      var dist = Math.hypot(mx-p.x, my-p.y);
+      var hov = dist < n.r + 18;
+      var scale = hov ? 1.28 : 1;
+      var r = n.r * scale;
+
+      // Outer ambient glow
+      var og = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r*2.8);
+      og.addColorStop(0, n.color+'18');
+      og.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,r*2.8,0,Math.PI*2);
+      ctx.fillStyle = og;
+      ctx.fill();
+
+      // Pulsing ring
+      var pr = r + 7 + Math.sin(t*2.2+i*0.8)*4;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,pr,0,Math.PI*2);
+      ctx.strokeStyle = n.color+'38';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Fill gradient
+      var fg = ctx.createRadialGradient(p.x-r*0.3,p.y-r*0.3,0,p.x,p.y,r);
+      fg.addColorStop(0, n.color+'CC');
+      fg.addColorStop(1, n.color+'44');
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,r,0,Math.PI*2);
+      ctx.fillStyle = fg;
+      ctx.fill();
+
+      // Border
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,r,0,Math.PI*2);
+      ctx.strokeStyle = n.color + (hov ? 'FF' : 'AA');
+      ctx.lineWidth = hov ? 2 : 1.5;
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = '#F0EBE1';
+      ctx.font = 'bold '+(i===0?12:10)+'px "Space Grotesk",sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(n.label, p.x, p.y + r + 8);
+
+      // Hover ripple
+      if(hov){
+        var rr = r + 16 + ((t*55)%28);
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,rr,0,Math.PI*2);
+        ctx.strokeStyle = n.color+'28';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    });
+
+    t += 0.011;
+    requestAnimationFrame(draw);
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting){ io.disconnect(); draw(); }
+  },{ threshold:0.15 });
+  io.observe(canvas);
+})();
+
+/* ════════════════════════════════════════════
+   §F  METRICS COUNT-UP
+════════════════════════════════════════════ */
+(function initMetrics(){
+  var done = false;
+  ScrollTrigger.create({
+    trigger: '.metrics-section',
+    start: 'top 82%',
+    once: true,
+    onEnter: function(){
+      if(done) return; done=true;
+      document.querySelectorAll('.met-num').forEach(function(el){
+        var target = +el.dataset.target;
+        var bar = el.closest('.met-card').querySelector('.met-bar');
+        var obj = { v:0 };
+        gsap.to(obj, {
+          v: target, duration:2, ease:'power2.out', delay:0.15,
+          onUpdate: function(){ el.textContent = Math.round(obj.v); },
+          onComplete: function(){ el.textContent = target; }
+        });
+        gsap.to(bar, { width:'100%', duration:1.7, ease:'power2.out', delay:0.25 });
+      });
+    }
+  });
+})();
+
+/* ════════════════════════════════════════════
+   §G  VALUES — MOUSE GLOW
+════════════════════════════════════════════ */
+document.querySelectorAll('.vc-card').forEach(function(card){
+  card.addEventListener('mousemove', function(e){
+    var r = card.getBoundingClientRect();
+    var x = ((e.clientX-r.left)/r.width*100).toFixed(1)+'%';
+    var y = ((e.clientY-r.top)/r.height*100).toFixed(1)+'%';
+    card.style.setProperty('--mx', x);
+    card.style.setProperty('--my', y);
+  });
+});
+
+/* ════════════════════════════════════════════
+   §H  QUOTE REVEAL
+════════════════════════════════════════════ */
+ScrollTrigger.create({
+  trigger: '#quote-block',
+  start: 'top 68%',
+  once: true,
+  onEnter: function(){
+    gsap.to('#q-text',   { y:0, opacity:1, duration:1.3, ease:'power3.out' });
+    gsap.to('#q-source', { opacity:1, duration:0.9, delay:0.7, ease:'power2.out' });
+  }
+});
+
+/* ════════════════════════════════════════════
+   §I  ENDING REVEAL
+════════════════════════════════════════════ */
+ScrollTrigger.create({
+  trigger: '#ending-inner',
+  start: 'top 72%',
+  once: true,
+  onEnter: function(){
+    gsap.to('#ending-pre',  { y:0, opacity:1, duration:0.7, ease:'power3.out' });
+    gsap.to('#ending-text', { y:0, opacity:1, duration:1.1, delay:0.2, ease:'power3.out' });
+    gsap.to('#ending-cta',  { y:0, opacity:1, duration:0.8, delay:0.6, ease:'power3.out' });
+  }
+});
+
+/* ════════════════════════════════════════════
+   §J  ENDING CANVAS — particles expand outward
+════════════════════════════════════════════ */
+(function initEndingCanvas(){
+  var canvas = document.getElementById('ending-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W=0, H=0, dpr=Math.min(devicePixelRatio,2);
+  var COLORS = ['#00D9FF','#A855F7','#C4A46B','#4ADE80'];
+
+  function resize(){
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width  = W*dpr;
+    canvas.height = H*dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr,dpr);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var particles = [];
+  for(var i=0;i<80;i++){
+    var angle = Math.random()*Math.PI*2;
+    particles.push({
+      x: 0.5, y: 0.5,
+      vx: Math.cos(angle)*(0.0003+Math.random()*0.0006),
+      vy: Math.sin(angle)*(0.0003+Math.random()*0.0006),
+      life: Math.random(),
+      speed: 0.4+Math.random()*0.8,
+      color: COLORS[Math.floor(Math.random()*COLORS.length)],
+      size: 1+Math.random()*2.5
+    });
+  }
+
+  var t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Radial glow at center
+    var cx=W*0.5, cy=H*0.5;
+    var rg = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.45);
+    rg.addColorStop(0,'rgba(0,217,255,0.03)');
+    rg.addColorStop(0.5,'rgba(168,85,247,0.02)');
+    rg.addColorStop(1,'transparent');
+    ctx.fillStyle = rg;
+    ctx.fillRect(0,0,W,H);
+
+    // Grid lines radiating
+    ctx.save();
+    ctx.globalAlpha = 0.06 + 0.02*Math.sin(t);
+    for(var a=0;a<8;a++){
+      var ang = (a/8)*Math.PI*2 + t*0.05;
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.lineTo(cx+Math.cos(ang)*Math.max(W,H), cy+Math.sin(ang)*Math.max(W,H));
+      ctx.strokeStyle='#00D9FF';
+      ctx.lineWidth=0.5;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    particles.forEach(function(p){
+      p.life += 0.003 * p.speed;
+      if(p.life > 1){ p.life = 0; var ang2=Math.random()*Math.PI*2; p.x=0.5+Math.cos(ang2)*0.02; p.y=0.5+Math.sin(ang2)*0.02; }
+      var px = p.x + Math.cos(p.life*Math.PI*2)*p.life*0.35;
+      var py = p.y + Math.sin(p.life*Math.PI*2 + Math.PI*0.5)*p.life*0.22;
+      var alpha = p.life < 0.2 ? p.life/0.2 : 1 - (p.life-0.2)/0.8;
+      ctx.beginPath();
+      ctx.arc(px*W, py*H, p.size, 0, Math.PI*2);
+      ctx.fillStyle = p.color + Math.round(alpha*160).toString(16).padStart(2,'0');
+      ctx.fill();
+    });
+
+    t += 0.008;
+    requestAnimationFrame(draw);
+  }
+
+  var io2 = new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting){ io2.disconnect(); draw(); }
+  },{ threshold:0.1 });
+  io2.observe(canvas);
+})();
+
+/* ════════════════════════════════════════════
+   §K  SHARED RV REVEAL (scroll-triggered)
+════════════════════════════════════════════ */
+document.querySelectorAll('.rv,.rv-clip,.rv-r').forEach(function(el){
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 88%',
+    once: true,
+    onEnter: function(){ el.classList.add('in'); }
+  });
+});
+
+
+
+
+/* ════════════════════════════════════════════
+   §L  PARALLAX SYSTEM — conflict-free
+   Rules: only tween bg/atmosphere elements.
+   Never tween .rv elements (CSS transition owns them).
+   Never tween elements with active CSS animations.
+════════════════════════════════════════════ */
+(function initParallax(){
+
+  /* HERO EXIT — bg layers only */
+  gsap.to('#orb-canvas', {
+    yPercent: -20, ease: 'none',
+    scrollTrigger: { trigger: '.ab-hero', start: 'top top', end: 'bottom top', scrub: 1.2 }
+  });
+  gsap.to('.ab-hero-grid-bg', {
+    yPercent: -10, ease: 'none',
+    scrollTrigger: { trigger: '.ab-hero', start: 'top top', end: 'bottom top', scrub: 1.2 }
+  });
+  gsap.to('.ab-hero-content', {
+    yPercent: -32, ease: 'none',
+    scrollTrigger: { trigger: '.ab-hero', start: 'top top', end: '80% top', scrub: 1 }
+  });
+  gsap.to('.ab-scroll-hint', {
+    yPercent: -50, opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.ab-hero', start: 'top top', end: '38% top', scrub: 1 }
+  });
+
+  /* BIGTYPE — tween section wrapper, NOT .bigtype-track (owned by RAF) */
+  gsap.to('.bigtype-section', {
+    yPercent: -5, ease: 'none',
+    scrollTrigger: { trigger: '.bigtype-section', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+
+  /* DNA — canvas + ambient orbs only.
+     .sec-tag and .sec-h have .rv class — CSS owns their reveal. */
+  gsap.from('#dna-canvas', {
+    yPercent: 8, ease: 'none',
+    scrollTrigger: { trigger: '.dna-section', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+  gsap.to('#dna-plx-1', {
+    yPercent: -40, ease: 'none',
+    scrollTrigger: { trigger: '.dna-section', start: 'top bottom', end: 'bottom top', scrub: 1.4 }
+  });
+  gsap.to('#dna-plx-2', {
+    yPercent: -24, ease: 'none',
+    scrollTrigger: { trigger: '.dna-section', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+
+  /* METRICS — ambient orb only.
+     .met-card has .rv class — CSS transition owns reveal. */
+  gsap.to('#met-plx-1', {
+    yPercent: -30, ease: 'none',
+    scrollTrigger: { trigger: '.metrics-section', start: 'top bottom', end: 'bottom top', scrub: 1.3 }
+  });
+
+  /* QUOTE — rings + lines only.
+     .q-orb has CSS animation on transform — do NOT tween it with GSAP. */
+  gsap.to('.q-rings', {
+    yPercent: -22, ease: 'none',
+    scrollTrigger: { trigger: '.quote-section', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+  gsap.to('#q-plx-lines', {
+    yPercent: 14, ease: 'none',
+    scrollTrigger: { trigger: '.quote-section', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+  gsap.from('.quote-inner', {
+    yPercent: 12, ease: 'none',
+    scrollTrigger: { trigger: '.quote-section', start: 'top bottom', end: 'center center', scrub: 1.2 }
+  });
+
+  /* VALUES — ambient orbs + image bg-position only.
+     .vc-card and headings have .rv class — CSS owns them. */
+  gsap.to('#val-plx-1', {
+    yPercent: -36, ease: 'none',
+    scrollTrigger: { trigger: '.values-cinema', start: 'top bottom', end: 'bottom top', scrub: 1.3 }
+  });
+  gsap.to('#val-plx-2', {
+    yPercent: -20, ease: 'none',
+    scrollTrigger: { trigger: '.values-cinema', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+  document.querySelectorAll('.vc-img').forEach(function(imgDiv) {
+    gsap.fromTo(imgDiv,
+      { backgroundPositionY: '30%' },
+      { backgroundPositionY: '70%', ease: 'none',
+        scrollTrigger: {
+          trigger: imgDiv.closest('.vc-card'),
+          start: 'top bottom', end: 'bottom top', scrub: 1
+        }
+      }
+    );
+  });
+
+  /* ENDING — canvas bg + inner container.
+     Children of #ending-inner are tweened by §I. */
+  gsap.to('#ending-canvas', {
+    yPercent: -18, ease: 'none',
+    scrollTrigger: { trigger: '.ending-section', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+  gsap.from('#ending-inner', {
+    yPercent: 12, ease: 'none',
+    scrollTrigger: { trigger: '.ending-section', start: 'top bottom', end: 'center center', scrub: 1.2 }
+  });
+
+})();
+
+
+})();
+
+</script>
+</body>
+</html>

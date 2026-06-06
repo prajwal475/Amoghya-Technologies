@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amoghya Technologies — Creative Technology Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--fg:#f0ebe1;--fg2:rgba(240,235,225,.52);--gold:#c4a46b;--bg:#020408;--bdr:rgba(240,235,225,.07);font-family:'Space Grotesk',sans-serif}
+html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
+#amg-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+#amg-scroll{height:900vh;position:relative;pointer-events:none}
+/* ── FLASH ── */
+#amg-flash{position:fixed;inset:0;z-index:60;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:80;padding:24px 44px;display:flex;align-items:center;justify-content:space-between;opacity:0;transform:translateY(-8px);transition:opacity .8s,transform .8s cubic-bezier(.16,1,.3,1)}
+#nav.show{opacity:1;transform:none}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--fg);text-decoration:none}
+.nav-logo b{color:var(--gold)}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg2);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+.nav-cta{font-size:10px;letter-spacing:.24em;text-transform:uppercase;padding:10px 22px;border:1px solid rgba(240,235,225,.18);border-radius:2px;color:var(--fg);text-decoration:none;transition:border-color .2s,background .2s}
+.nav-cta:hover{border-color:var(--gold);background:rgba(196,164,107,.07)}
+/* ── FIXED OVERLAYS ── */
+.cho{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0s}
+.cho.vis{opacity:1;pointer-events:auto;transition:opacity .45s cubic-bezier(.16,1,.3,1)}
+.cho-left{justify-content:flex-start;padding-left:72px;align-items:center}
+/* Entry text */
+#cho0{flex-direction:column;gap:20px;text-align:center}
+.entry-signal{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);opacity:0;animation:none}
+.entry-signal.glow{animation:sg .8s .4s both}
+@keyframes sg{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.entry-headline{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,56px);font-weight:800;line-height:1.1;letter-spacing:-.02em;color:var(--fg);opacity:0}
+.entry-headline.glow{animation:sg 1s .9s both}
+.entry-sub{font-size:13px;color:var(--fg2);letter-spacing:.08em;opacity:0}
+.entry-sub.glow{animation:sg .8s 1.6s both}
+.entry-hint{font-size:8px;letter-spacing:.38em;text-transform:uppercase;color:rgba(240,235,225,.22);opacity:0}
+.entry-hint.glow{animation:sg .6s 2.4s both}
+/* Wordmark */
+#amg-wordmark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:55;text-align:center;opacity:0;pointer-events:none;transition:opacity .9s cubic-bezier(.16,1,.3,1)}
+#amg-wordmark.show{opacity:1}
+.amg-wm{font-family:'Syne',sans-serif;font-size:clamp(44px,9vw,130px);font-weight:800;line-height:.86;letter-spacing:-.04em;text-transform:uppercase;color:var(--fg)}
+.amg-wm-sub{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-top:18px}
+/* Vision ch1 */
+#cho1{flex-direction:column;gap:0;text-align:center}
+.ch1-tag{font-size:9px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.ch1-tag::before,.ch1-tag::after{content:'';display:block;width:22px;height:1px;background:var(--gold)}
+.ch1-h{font-family:'Syne',sans-serif;font-size:clamp(38px,6vw,90px);font-weight:800;line-height:.88;letter-spacing:-.035em;text-transform:uppercase;margin-bottom:28px}
+.ch1-h .ghost{-webkit-text-stroke:1.5px rgba(240,235,225,.2);color:transparent}
+.ch1-sub{font-size:14px;color:var(--fg2);line-height:1.85;max-width:420px;margin-bottom:44px}
+.ch1-btns{display:flex;gap:14px}
+/* Orbit ch2 */
+#cho2{flex-direction:column;gap:0}
+.cho2-inner{position:absolute;left:72px;top:50%;transform:translateY(-50%);max-width:360px}
+.ch-eyebrow{font-size:9px;letter-spacing:.44em;text-transform:uppercase;color:rgba(240,235,225,.3);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.ch-eyebrow::before{content:'';display:block;width:24px;height:1px;background:currentColor;opacity:.55}
+.ch-concept{font-size:10px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.ch-h{font-family:'Syne',sans-serif;font-size:clamp(32px,4vw,58px);font-weight:800;line-height:.9;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:18px}
+.ch-h span{-webkit-text-stroke:1.5px rgba(240,235,225,.2);color:transparent}
+.ch-hint{font-size:11px;color:var(--fg2);line-height:1.8;margin-bottom:28px;max-width:300px}
+.ch-mini{font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:rgba(240,235,225,.28);display:flex;align-items:center;gap:8px}
+.ch-mini::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7}
+/* Archive ch3 */
+#cho3{flex-direction:column}
+.cho3-inner{position:absolute;right:72px;top:50%;transform:translateY(-50%);max-width:360px;text-align:right;overflow:hidden}
+#cho3 .ch-h{font-size:clamp(22px,2.8vw,40px);line-height:.92}
+.stats-row{display:flex;gap:40px;justify-content:flex-end;margin-top:28px}
+.stat-item{display:flex;flex-direction:column;gap:6px}
+.stat-v{font-family:'Syne',sans-serif;font-size:clamp(40px,5vw,72px);font-weight:800;letter-spacing:-.04em;color:var(--gold);line-height:1}
+.stat-l{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--fg2)}
+/* Engine ch4 */
+#cho4{flex-direction:column}
+.cho4-inner{position:absolute;left:72px;top:50%;transform:translateY(-50%);max-width:380px}
+.engine-steps{display:flex;flex-direction:column;gap:0;margin-top:28px}
+.engine-step{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(240,235,225,.06);font-size:11px;color:var(--fg2)}
+.engine-step-num{font-size:8px;letter-spacing:.3em;color:var(--gold);opacity:.7;min-width:24px}
+/* Projects ch5 */
+#cho5{flex-direction:column}
+.cho5-inner{position:absolute;right:72px;top:50%;transform:translateY(-50%);max-width:360px;text-align:right;overflow:hidden}
+#cho5 .ch-h{font-size:clamp(22px,2.8vw,40px);line-height:.92}
+.proj-list{margin-top:24px;display:flex;flex-direction:column;gap:0}
+.proj-item{padding:14px 0;border-bottom:1px solid rgba(240,235,225,.06);text-align:right;cursor:pointer;transition:background .2s}
+.proj-item-tag{font-size:8px;letter-spacing:.3em;text-transform:uppercase;margin-bottom:6px}
+.proj-item-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.01em;color:var(--fg);transition:color .2s}
+.proj-item:hover .proj-item-name{color:var(--gold)}
+/* Final ch6 */
+#cho6{flex-direction:column;gap:0;text-align:center}
+.final-eyebrow{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:32px}
+.final-manifesto{font-family:'Syne',sans-serif;font-size:clamp(18px,2.8vw,42px);font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px;max-width:680px}
+.final-sub{font-size:13px;color:var(--fg2);line-height:1.85;max-width:480px;margin:0 auto 48px}
+.final-btns{display:flex;gap:14px;justify-content:center}
+/* ── ORBITAL LABELS ── */
+#orb-labels{position:fixed;inset:0;z-index:15;pointer-events:none;opacity:0;transition:opacity .6s}
+#orb-labels.vis{opacity:1}
+.orb-label{position:absolute;transform:translate(-50%,-50%);text-align:center;pointer-events:auto;cursor:pointer;transition:opacity .3s}
+.orb-label-name{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(240,235,225,.6);transition:color .2s;white-space:nowrap}
+.orb-label-dot{width:4px;height:4px;border-radius:50%;margin:4px auto 0;transition:transform .2s,opacity .2s}
+.orb-label:hover .orb-label-name{color:var(--fg)}
+.orb-label:hover .orb-label-dot{transform:scale(1.6)}
+/* ── SERVICE PANELS ── */
+.asp{position:fixed;top:0;right:0;bottom:0;width:48%;z-index:70;opacity:0;transform:translateX(100%);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1);pointer-events:none;overflow:hidden;display:flex;flex-direction:column;border-left:1px solid rgba(240,235,225,.08)}
+.asp.open{opacity:1;transform:none;pointer-events:auto}
+.asp-bg{position:absolute;inset:0;background:rgba(2,4,8,.92);backdrop-filter:blur(28px);z-index:-1}
+.asp-header{flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding:22px 28px 14px;border-bottom:1px solid rgba(240,235,225,.06)}
+.asp-close{display:inline-flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.26em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif;font-weight:500;color:rgba(240,235,225,.45);background:transparent;border:1px solid rgba(240,235,225,.12);border-radius:2px;padding:7px 16px;cursor:pointer;transition:color .2s,border-color .2s}
+.asp-close:hover{color:var(--fg);border-color:rgba(240,235,225,.35)}
+.asp-close svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.asp-body{flex:1;overflow-y:auto;padding:44px 60px 80px 52px}
+.asp-num{font-size:9px;letter-spacing:.44em;text-transform:uppercase;color:rgba(240,235,225,.28);margin-bottom:10px}
+.asp-name{font-family:'Syne',sans-serif;font-size:clamp(28px,3.5vw,48px);font-weight:800;line-height:.9;letter-spacing:-.025em;text-transform:uppercase;margin-bottom:24px}
+.asp-story{font-size:15px;color:var(--fg2);line-height:1.9;margin-bottom:32px;padding-left:18px;border-left:2px solid}
+.asp-feats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:36px}
+.asp-feat{font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:5px 13px;border:1px solid;border-radius:2px}
+.asp-cta{display:inline-flex;align-items:center;gap:10px;font-size:9px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;text-decoration:none;transition:gap .22s}
+.asp-cta:hover{gap:16px}
+.asp-cta svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+/* ── BUTTONS ── */
+.btn-p{display:inline-flex;align-items:center;gap:11px;font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:13px 28px;background:var(--gold);color:#020408;border-radius:2px;text-decoration:none;transition:background .25s,gap .2s;border:none;cursor:pointer;font-family:'Space Grotesk',sans-serif}
+.btn-p:hover{background:#d4b47b;gap:17px}
+.btn-p svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.btn-o{display:inline-flex;align-items:center;gap:11px;font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:12px 28px;background:transparent;color:var(--fg);border:1px solid rgba(240,235,225,.18);border-radius:2px;text-decoration:none;transition:border-color .2s,gap .2s}
+.btn-o:hover{border-color:rgba(240,235,225,.45);gap:17px}
+/* ── SCROLL PROGRESS ── */
+#sp{position:fixed;left:0;top:0;bottom:0;width:2px;z-index:90;background:rgba(240,235,225,.04)}
+#sp-fill{position:absolute;top:0;left:0;right:0;height:0%;background:linear-gradient(to bottom,var(--gold),rgba(196,164,107,.3))}
+/* ── CURSOR ── */
+#cur{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--fg);z-index:9999;pointer-events:none;transform:translate(-50%,-50%);transition:opacity .3s;opacity:0}
+#cur-ring{position:fixed;width:32px;height:32px;border-radius:50%;border:1px solid rgba(240,235,225,.3);z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:opacity .3s;opacity:0}
+/* ── FOOTER ── */
+#amg-footer{position:relative;z-index:10;background:var(--bg);border-top:1px solid var(--bdr);padding:56px 72px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.f-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.02em}
+.f-logo b{color:var(--gold)}
+.f-copy{font-size:11px;color:var(--fg2);line-height:1.7}
+.f-links{display:flex;gap:24px;list-style:none}
+.f-links a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg2);text-decoration:none;transition:color .2s}
+.f-links a:hover{color:var(--fg)}
+.f-contact p, .f-contact a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg2);text-decoration:none;transition:color .2s;line-height:1.7}
+.f-contact a:hover{color:var(--fg)}
+
+@media (max-width: 900px) {
+  /* Fix massive fonts on mobile */
+  .amg-wm { font-size: clamp(24px, 10vw, 44px) !important; }
+  .ch1-h { font-size: clamp(28px, 9vw, 40px) !important; }
+  .ch-h { font-size: clamp(22px, 8vw, 36px) !important; }
+  .entry-headline { font-size: clamp(24px, 8vw, 40px) !important; }
+  .final-manifesto { font-size: clamp(20px, 6vw, 32px) !important; }
+  .stat-v { font-size: clamp(28px, 10vw, 40px) !important; }
+
+  /* Fix side padding/positioning which squeezed content on mobile */
+  .cho-left { padding-left: 20px !important; padding-right: 20px !important; text-align: center !important; }
+  .cho2-inner, .cho4-inner { left: 20px !important; right: 20px !important; max-width: 100% !important; text-align: center !important; }
+  .cho3-inner, .cho5-inner { right: 20px !important; left: 20px !important; max-width: 100% !important; text-align: center !important; }
+  .ch-hint, .ch1-sub, .final-sub { max-width: 100% !important; margin-left: auto; margin-right: auto; }
+  .stats-row { justify-content: center !important; gap: 20px !important; }
+  .ch1-btns, .final-btns { flex-direction: column !important; gap: 10px !important; align-items: stretch !important; }
+  .ch-eyebrow, .ch-concept, .ch-mini { justify-content: center !important; }
+}
+</style>
+</head>
+<body>
+<div id="sp"><div id="sp-fill"></div></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="amg-flash"></div>
+<canvas id="amg-canvas"></canvas>
+
+<!-- NAV (hidden until entry completes) -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Amogh<b>ya</b></a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="process.html">Process</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Start a Project</a>
+</nav>
+
+<!-- WORDMARK (appears at entry convergence) -->
+<div id="amg-wordmark">
+  <div class="amg-wm">Amoghya<br>Technologies</div>
+  <div class="amg-wm-sub">Creative Technology Studio</div>
+</div>
+
+<!-- CHAPTER OVERLAYS -->
+
+<!-- Ch0: Entry Signal -->
+<div class="cho" id="cho0">
+  <div class="entry-signal" id="es">The Signal</div>
+  <div class="entry-headline" id="eh">Every great product<br>begins as a signal.</div>
+  <div class="entry-sub" id="esub">An idea. A challenge. An opportunity.</div>
+  <div class="entry-hint" id="ehint">↓ &nbsp; Scroll to begin</div>
+</div>
+
+<!-- Ch1: Vision -->
+<div class="cho" id="cho1">
+  <div class="ch1-tag">Creative Technology Studio</div>
+  <h1 class="ch1-h">We transform<br>ambitious <span class="ghost">ideas</span><br>into experiences<br>people <span class="ghost">remember.</span></h1>
+  <p class="ch1-sub">Premium digital products for modern brands — blending craft, technology, and bold vision.</p>
+  <div class="ch1-btns">
+    <a href="services.html" class="btn-p">Explore Services <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a href="work.html" class="btn-o">View Our Work</a>
+  </div>
+</div>
+
+<!-- Ch2: Orbit -->
+<div class="cho cho-left" id="cho2">
+  <div class="cho2-inner">
+    <div class="ch-eyebrow">Chapter 02</div>
+    <div class="ch-concept">Capability Orbit</div>
+    <h2 class="ch-h">Seven<br><span>disciplines.</span><br>One<br><span>ecosystem.</span></h2>
+    <p class="ch-hint">Seven specialized worlds orbit a single core. Each one engineered to build, grow, and evolve your digital presence.</p>
+    <div class="ch-mini" style="margin-bottom:20px">Click any world to explore</div>
+    <a href="services.html" class="btn-o" style="font-size:9px;padding:9px 20px">All Services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+
+<!-- Ch3: Archive → about.html -->
+<div class="cho" id="cho3">
+  <div class="cho3-inner">
+    <div class="ch-eyebrow">Chapter 03</div>
+    <div class="ch-concept" style="text-align:right">The Archive</div>
+    <h2 class="ch-h" style="text-align:right">Every project<br>leaves behind<br><span>knowledge.</span></h2>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-v">50+</div><div class="stat-l">Projects</div></div>
+      <div class="stat-item"><div class="stat-v">30+</div><div class="stat-l">Clients</div></div>
+    </div>
+    <div style="margin-top:28px;display:flex;justify-content:flex-end">
+      <a href="about.html" class="btn-o" style="font-size:9px;padding:9px 20px">Our Story <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<!-- Ch4: Creation Engine → process.html -->
+<div class="cho cho-left" id="cho4">
+  <div class="cho4-inner">
+    <div class="ch-eyebrow">Chapter 04</div>
+    <div class="ch-concept">Creation Engine</div>
+    <h2 class="ch-h">A journey<br>designed to<br><span>maximize impact.</span></h2>
+    <div class="engine-steps">
+      <div class="engine-step"><span class="engine-step-num">01</span>Signal Detected — Discovery</div>
+      <div class="engine-step"><span class="engine-step-num">02</span>Structure Emerges — Strategy</div>
+      <div class="engine-step"><span class="engine-step-num">03</span>Experience Forms — Design</div>
+      <div class="engine-step"><span class="engine-step-num">04</span>System Activates — Build</div>
+      <div class="engine-step"><span class="engine-step-num">05</span>System Validates — Quality</div>
+      <div class="engine-step"><span class="engine-step-num">06</span>Ecosystem Expands — Launch</div>
+    </div>
+    <div style="margin-top:24px">
+      <a href="process.html" class="btn-o" style="font-size:9px;padding:9px 20px">See Full Process <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<!-- Ch5: Selected Realities -->
+<div class="cho" id="cho5">
+  <div class="cho5-inner">
+    <div class="ch-eyebrow">Chapter 05</div>
+    <div class="ch-concept" style="text-align:right">Selected Realities</div>
+    <h2 class="ch-h" style="text-align:right">Projects that<br>define what's<br><span>possible.</span></h2>
+    <div class="proj-list">
+      <a href="work.html" class="proj-item">
+        <div class="proj-item-tag" style="color:#22d3ee">Web Development</div>
+        <div class="proj-item-name">Stellar Brand Studio</div>
+      </a>
+      <a href="work.html" class="proj-item">
+        <div class="proj-item-tag" style="color:#a855f7">App Development</div>
+        <div class="proj-item-name">Nexus Dashboard</div>
+      </a>
+      <a href="work.html" class="proj-item">
+        <div class="proj-item-tag" style="color:#84cc16">AI Solutions</div>
+        <div class="proj-item-name">Visionary AI Studio</div>
+      </a>
+      <a href="work.html" class="proj-item">
+        <div class="proj-item-tag" style="color:#c4a46b">Brand Identity</div>
+        <div class="proj-item-name">Epoch Brand System</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Ch6: Final -->
+<div class="cho" id="cho6">
+  <div class="final-eyebrow">Signal &nbsp;·&nbsp; Blueprint &nbsp;·&nbsp; Interface &nbsp;·&nbsp; System &nbsp;·&nbsp; Validation &nbsp;·&nbsp; Ecosystem</div>
+  <h2 class="final-manifesto">We don't just launch products.<br>We create digital ecosystems<br>designed to grow, adapt, and endure.</h2>
+  <p class="final-sub">Technology changes. Markets evolve. Great products adapt. The journey never ends — and neither does our partnership.</p>
+  <div class="final-btns">
+    <a href="contact.html" class="btn-p">Start a Project <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a href="work.html" class="btn-o">Explore Our Work</a>
+  </div>
+</div>
+
+<!-- ORBITAL LABELS -->
+<div id="orb-labels">
+  <div class="orb-label" id="ol0" onclick="openService(0)"><div class="orb-label-name">Web Development</div><div class="orb-label-dot" style="background:#22d3ee;box-shadow:0 0 8px #22d3ee"></div></div>
+  <div class="orb-label" id="ol1" onclick="openService(1)"><div class="orb-label-name">App Development</div><div class="orb-label-dot" style="background:#a855f7;box-shadow:0 0 8px #a855f7"></div></div>
+  <div class="orb-label" id="ol2" onclick="openService(2)"><div class="orb-label-name">Content Production</div><div class="orb-label-dot" style="background:#f97316;box-shadow:0 0 8px #f97316"></div></div>
+  <div class="orb-label" id="ol3" onclick="openService(3)"><div class="orb-label-name">AI Solutions</div><div class="orb-label-dot" style="background:#84cc16;box-shadow:0 0 8px #84cc16"></div></div>
+  <div class="orb-label" id="ol4" onclick="openService(4)"><div class="orb-label-name">Digital Growth</div><div class="orb-label-dot" style="background:#38bdf8;box-shadow:0 0 8px #38bdf8"></div></div>
+  <div class="orb-label" id="ol5" onclick="openService(5)"><div class="orb-label-name">Brand Identity</div><div class="orb-label-dot" style="background:#c4a46b;box-shadow:0 0 8px #c4a46b"></div></div>
+  <div class="orb-label" id="ol6" onclick="openService(6)"><div class="orb-label-name">Care &amp; Support</div><div class="orb-label-dot" style="background:#f472b6;box-shadow:0 0 8px #f472b6"></div></div>
+</div>
+
+<!-- SERVICE EXPAND PANELS -->
+<div class="asp" id="asp0"><div class="asp-bg"></div><div class="asp-header"><button class="asp-close" onclick="closeService()">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="asp-body"><div class="asp-num">01 — Presence</div><div class="asp-name" style="color:#22d3ee">Web Development</div><p class="asp-story" style="border-color:#22d3ee">Digital experiences engineered for performance and impact. Premium websites, immersive 3D interfaces, and responsive platforms that convert visitors into believers.</p><div class="asp-feats"><span class="asp-feat" style="border-color:rgba(34,211,238,.25);color:rgba(34,211,238,.75)">Premium Websites</span><span class="asp-feat" style="border-color:rgba(34,211,238,.25);color:rgba(34,211,238,.75)">3D Interfaces</span><span class="asp-feat" style="border-color:rgba(34,211,238,.25);color:rgba(34,211,238,.75)">UI/UX Design</span><span class="asp-feat" style="border-color:rgba(34,211,238,.25);color:rgba(34,211,238,.75)">E-Commerce</span><span class="asp-feat" style="border-color:rgba(34,211,238,.25);color:rgba(34,211,238,.75)">Landing Pages</span></div><a href="services.html" class="asp-cta" style="color:#22d3ee">Explore this world <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div>
+<div class="asp" id="asp1"><div class="asp-bg"></div><div class="asp-header"><button class="asp-close" onclick="closeService()">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="asp-body"><div class="asp-num">02 — Systems</div><div class="asp-name" style="color:#a855f7">App Development</div><p class="asp-story" style="border-color:#a855f7">Platforms built to scale, adapt and evolve. Custom web applications, intelligent dashboards, and full-stack systems engineered for performance and growth.</p><div class="asp-feats"><span class="asp-feat" style="border-color:rgba(168,85,247,.25);color:rgba(168,85,247,.75)">SaaS Platforms</span><span class="asp-feat" style="border-color:rgba(168,85,247,.25);color:rgba(168,85,247,.75)">Dashboards</span><span class="asp-feat" style="border-color:rgba(168,85,247,.25);color:rgba(168,85,247,.75)">Full-Stack</span><span class="asp-feat" style="border-color:rgba(168,85,247,.25);color:rgba(168,85,247,.75)">MVP Builds</span><span class="asp-feat" style="border-color:rgba(168,85,247,.25);color:rgba(168,85,247,.75)">APIs</span></div><a href="services.html" class="asp-cta" style="color:#a855f7">Explore this world <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div>
+<div class="asp" id="asp2"><div class="asp-bg"></div><div class="asp-header"><button class="asp-close" onclick="closeService()">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="asp-body"><div class="asp-num">03 — Attention</div><div class="asp-name" style="color:#f97316">Content Production</div><p class="asp-story" style="border-color:#f97316">Content that captures attention and creates connection. Cinematic videos, motion graphics, and premium visual storytelling that stops thumbs mid-scroll.</p><div class="asp-feats"><span class="asp-feat" style="border-color:rgba(249,115,22,.25);color:rgba(249,115,22,.75)">Brand Films</span><span class="asp-feat" style="border-color:rgba(249,115,22,.25);color:rgba(249,115,22,.75)">Motion Design</span><span class="asp-feat" style="border-color:rgba(249,115,22,.25);color:rgba(249,115,22,.75)">Social Reels</span><span class="asp-feat" style="border-color:rgba(249,115,22,.25);color:rgba(249,115,22,.75)">Photography</span><span class="asp-feat" style="border-color:rgba(249,115,22,.25);color:rgba(249,115,22,.75)">3D Animation</span></div><a href="services.html" class="asp-cta" style="color:#f97316">Explore this world <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div>
+<div class="asp" id="asp3"><div class="asp-bg"></div><div class="asp-header"><button class="asp-close" onclick="closeService()">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="asp-body"><div class="asp-num">04 — Intelligence</div><div class="asp-name" style="color:#84cc16">AI Solutions</div><p class="asp-story" style="border-color:#84cc16">Intelligence integrated into every experience. AI-powered automation, intelligent chatbots, and generative AI tools that transform how your brand operates and creates.</p><div class="asp-feats"><span class="asp-feat" style="border-color:rgba(132,204,22,.25);color:rgba(132,204,22,.75)">LLM Integration</span><span class="asp-feat" style="border-color:rgba(132,204,22,.25);color:rgba(132,204,22,.75)">AI Chatbots</span><span class="asp-feat" style="border-color:rgba(132,204,22,.25);color:rgba(132,204,22,.75)">Automation</span><span class="asp-feat" style="border-color:rgba(132,204,22,.25);color:rgba(132,204,22,.75)">Generative AI</span><span class="asp-feat" style="border-color:rgba(132,204,22,.25);color:rgba(132,204,22,.75)">ML Pipelines</span></div><a href="services.html" class="asp-cta" style="color:#84cc16">Explore this world <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div>
+<div class="asp" id="asp4"><div class="asp-bg"></div><div class="asp-header"><button class="asp-close" onclick="closeService()">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="asp-body"><div class="asp-num">05 — Growth</div><div class="asp-name" style="color:#38bdf8">Digital Growth</div><p class="asp-story" style="border-color:#38bdf8">Growth driven by strategy, insight and performance. Data-driven SEO, social campaigns, and targeted marketing that drives real, measurable, scalable results.</p><div class="asp-feats"><span class="asp-feat" style="border-color:rgba(56,189,248,.25);color:rgba(56,189,248,.75)">SEO / SEM</span><span class="asp-feat" style="border-color:rgba(56,189,248,.25);color:rgba(56,189,248,.75)">Social Campaigns</span><span class="asp-feat" style="border-color:rgba(56,189,248,.25);color:rgba(56,189,248,.75)">Paid Advertising</span><span class="asp-feat" style="border-color:rgba(56,189,248,.25);color:rgba(56,189,248,.75)">Analytics</span><span class="asp-feat" style="border-color:rgba(56,189,248,.25);color:rgba(56,189,248,.75)">CRO</span></div><a href="services.html" class="asp-cta" style="color:#38bdf8">Explore this world <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div>
+<div class="asp" id="asp5"><div class="asp-bg"></div><div class="asp-header"><button class="asp-close" onclick="closeService()">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="asp-body"><div class="asp-num">06 — Identity</div><div class="asp-name" style="color:#c4a46b">Brand Identity</div><p class="asp-story" style="border-color:#c4a46b">Brands designed to be remembered. Complete visual identities — logos, type systems, colour palettes, and brand guidelines that crystallise who you are.</p><div class="asp-feats"><span class="asp-feat" style="border-color:rgba(196,164,107,.25);color:rgba(196,164,107,.75)">Logo Design</span><span class="asp-feat" style="border-color:rgba(196,164,107,.25);color:rgba(196,164,107,.75)">Typography</span><span class="asp-feat" style="border-color:rgba(196,164,107,.25);color:rgba(196,164,107,.75)">Colour Systems</span><span class="asp-feat" style="border-color:rgba(196,164,107,.25);color:rgba(196,164,107,.75)">Brand Guidelines</span><span class="asp-feat" style="border-color:rgba(196,164,107,.25);color:rgba(196,164,107,.75)">Packaging</span></div><a href="services.html" class="asp-cta" style="color:#c4a46b">Explore this world <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div>
+<div class="asp" id="asp6"><div class="asp-bg"></div><div class="asp-header"><button class="asp-close" onclick="closeService()">Close <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="asp-body"><div class="asp-num">07 — Evolution</div><div class="asp-name" style="color:#f472b6">Care &amp; Support</div><p class="asp-story" style="border-color:#f472b6">Built for longevity, supported for growth. Dedicated maintenance, performance monitoring, and priority technical support to keep your product evolving.</p><div class="asp-feats"><span class="asp-feat" style="border-color:rgba(244,114,182,.25);color:rgba(244,114,182,.75)">Monitoring</span><span class="asp-feat" style="border-color:rgba(244,114,182,.25);color:rgba(244,114,182,.75)">Security</span><span class="asp-feat" style="border-color:rgba(244,114,182,.25);color:rgba(244,114,182,.75)">Updates</span><span class="asp-feat" style="border-color:rgba(244,114,182,.25);color:rgba(244,114,182,.75)">Bug Fixes</span><span class="asp-feat" style="border-color:rgba(244,114,182,.25);color:rgba(244,114,182,.75)">Priority SLA</span></div><a href="services.html" class="asp-cta" style="color:#f472b6">Explore this world <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div></div>
+
+<!-- SCROLL DRIVER -->
+<div id="amg-scroll"></div>
+
+<!-- FOOTER -->
+<footer id="amg-footer">
+  <div class="f-logo">Amogh<b>ya</b></div>
+  <div class="f-contact">
+    <span class="f-contact-head"></span>
+    <p>Vyara Amoghya group of Industries</p>
+    <p>Tc palya main road, Bengaluru</p>
+    <p>Karnataka 560036, India</p>
+    <p><a href="tel:+918147279758">+91 81472 79758</a></p>
+    <p><a href="mailto:amoghyatechnologies@gmail.com">amoghyatechnologies@gmail.com</a></p>
+  </div>
+  <div class="f-copy">&copy; 2024 Amoghya Technologies. All rights reserved.</div>
+  <ul class="f-links">
+    <li><a href="https://www.instagram.com/amoghyatechnologies?igsh=MWZ1ZGNmamFhNGZtZA==" target="_blank" rel="noopener noreferrer">Instagram</a></li><li><a href="https://m.facebook.com/profile.php?id=61590304693775" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+  </ul>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+if(typeof THREE==='undefined')return;
+/* ═══ CHAPTER BOUNDARIES (fraction of total scroll) ═══ */
+var CB=[0,.17,.31,.55,.68,.82,.95,1.0]; // 8 boundaries for 7 chapters
+var N=7;
+/* ═══ WORLDS DATA ═══ */
+var WD=[
+  {c:0x22d3ee,r:6,  incl:.22, spd:.007,ph:0},
+  {c:0xa855f7,r:8.5,incl:-.28,spd:.006,ph:1.1},
+  {c:0xf97316,r:5.5,incl:.48, spd:.009,ph:2.2},
+  {c:0x84cc16,r:10, incl:.12, spd:.005,ph:3.4},
+  {c:0x38bdf8,r:7,  incl:-.42,spd:.008,ph:4.5},
+  {c:0xc4a46b,r:9,  incl:.33, spd:.006,ph:5.6},
+  {c:0xf472b6,r:11.5,incl:-.18,spd:.004,ph:0.7}
+];
+/* ═══ CAMERA WAYPOINTS ═══ */
+var CW=[
+  {x:0,y:0, z:90, rx:0,   ry:0},
+  {x:0,y:0, z:22, rx:0,   ry:0},
+  {x:2,y:1, z:16, rx:-.04,ry:.08},
+  {x:0,y:6, z:35, rx:-.16,ry:0},
+  {x:-8,y:0,z:22, rx:0,   ry:-.18},
+  {x:0,y:0, z:18, rx:.05, ry:0},
+  {x:0,y:0, z:14, rx:0,   ry:0},
+  {x:0,y:0, z:65, rx:-.08,ry:0}
+];
+/* ═══ RENDERER ═══ */
+var canvas=document.getElementById('amg-canvas');
+var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));
+renderer.setSize(innerWidth,innerHeight);
+renderer.setClearColor(0x020408,1);
+var scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x020408,.028);
+var camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,.1,500);
+camera.position.set(0,0,90);
+var clock=new THREE.Clock();
+var raycaster=new THREE.Raycaster();
+/* ═══ LIGHTS ═══ */
+scene.add(new THREE.AmbientLight(0x06060e,1));
+var kl=new THREE.PointLight(0xc4a46b,2,80);kl.position.set(0,8,4);scene.add(kl);
+/* ═══ HELPERS ═══ */
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp01(v){return Math.max(0,Math.min(1,v));}
+function ss(t){t=clamp01(t);return t*t*(3-2*t);}
+function lmat(c,o){return new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o});}
+function mmat(c,o){return new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o});}
+/* ═══ STARFIELD ═══ */
+(function(){
+  var pos=new Float32Array(4000*3);
+  for(var i=0;i<4000;i++){
+    var th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=60+Math.random()*160;
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th);pos[i*3+1]=r*Math.sin(ph)*Math.sin(th)*.6;pos[i*3+2]=r*Math.cos(ph);
+  }
+  var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:.06,transparent:true,opacity:.4})));
+})();
+/* ═══ ENTRY PARTICLES ═══ */
+var EPT=1800;
+var ePosArr=new Float32Array(EPT*3);
+var eSphere=new Float32Array(EPT*3);
+var eColors=new Float32Array(EPT*3);
+(function(){
+  for(var i=0;i<EPT;i++){
+    var th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=4+Math.random()*22;
+    eSphere[i*3]=r*Math.sin(ph)*Math.cos(th);eSphere[i*3+1]=r*Math.sin(ph)*Math.sin(th)*.7;eSphere[i*3+2]=r*Math.cos(ph);
+    var bright=.5+Math.random()*.5;eColors[i*3]=bright*.9;eColors[i*3+1]=bright*.82;eColors[i*3+2]=bright*.6;
+  }
+})();
+var eGeo=new THREE.BufferGeometry();eGeo.setAttribute('position',new THREE.BufferAttribute(ePosArr,3));eGeo.setAttribute('color',new THREE.BufferAttribute(eColors,3));
+var eMat=new THREE.PointsMaterial({size:.1,transparent:true,opacity:0,vertexColors:true,sizeAttenuation:true});
+var ePts=new THREE.Points(eGeo,eMat);scene.add(ePts);
+/* ═══ CENTRAL SIGNAL CORE ═══ */
+var sigCore=new THREE.Mesh(new THREE.SphereGeometry(.28,20,20),mmat(0xffeedd,.9));scene.add(sigCore);
+var sigGlow=new THREE.Mesh(new THREE.SphereGeometry(.6,16,16),new THREE.MeshBasicMaterial({color:0xc4a46b,transparent:true,opacity:.15}));scene.add(sigGlow);
+var sigRing=new THREE.Mesh(new THREE.TorusGeometry(.85,.02,8,60),mmat(0xc4a46b,.3));sigRing.userData.spinAxis='y';sigRing.userData.spinSpeed=.015;scene.add(sigRing);
+/* ═══ ORBITAL SYSTEM ═══ */
+var orbGrp=new THREE.Group();orbGrp.visible=false;scene.add(orbGrp);
+var orbSpheres=[];var orbPhases=[];
+/* central core */
+orbGrp.add(new THREE.Mesh(new THREE.SphereGeometry(.7,24,24),mmat(0xffeedd,.85)));
+orbGrp.add(new THREE.Mesh(new THREE.SphereGeometry(1.1,16,16),new THREE.MeshBasicMaterial({color:0xc4a46b,transparent:true,opacity:.12})));
+WD.forEach(function(w,i){
+  /* orbit path ring */
+  var ring=new THREE.Mesh(new THREE.TorusGeometry(w.r,.018,6,100),mmat(w.c,.14));
+  ring.rotation.x=w.incl;ring.rotation.y=w.ph*.3;orbGrp.add(ring);
+  /* world sphere */
+  var s=new THREE.Mesh(new THREE.SphereGeometry(.35,16,16),mmat(w.c,.85));
+  s.userData.worldIdx=i;orbSpheres.push(s);orbGrp.add(s);
+  /* glow */
+  var gl=new THREE.Mesh(new THREE.SphereGeometry(.6,12,12),new THREE.MeshBasicMaterial({color:w.c,transparent:true,opacity:.14}));
+  gl.userData.glowRef=s;orbGrp.add(gl);
+  orbPhases.push(w.ph);
+});
+/* ═══ ARCHIVE NODES ═══ */
+var archGrp=new THREE.Group();archGrp.visible=false;scene.add(archGrp);
+(function(){
+  var pos=new Float32Array(50*3);
+  for(var i=0;i<50;i++){
+    var th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1),r=2+Math.random()*5;
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th)+8;pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);pos[i*3+2]=r*Math.cos(ph);
+  }
+  var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  archGrp.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xc4a46b,size:.18,transparent:true,opacity:.8})));
+})();
+/* ═══ ENGINE ═══ */
+var engGrp=new THREE.Group();engGrp.visible=false;scene.add(engGrp);
+(function(){
+  var kGeo=new THREE.TorusKnotGeometry(2.2,.28,100,10,2,3);
+  var eng=new THREE.LineSegments(new THREE.EdgesGeometry(kGeo),lmat(0x84cc16,.55));
+  eng.userData.spinAxis='y';eng.userData.spinSpeed=.005;engGrp.add(eng);kGeo.dispose();
+  [[4,.055,Math.PI/2,0,.008,.42],[5.5,.04,Math.PI/2+.7,.3,-.006,.32]].forEach(function(d){
+    var t=new THREE.Mesh(new THREE.TorusGeometry(d[0],d[1],6,80),mmat(0x84cc16,d[5]));
+    t.rotation.set(d[2],d[3],0);t.userData.spinSpeed=d[4];t.userData.spinAxis='z';engGrp.add(t);
+  });
+})();
+/* ═══ FINAL ASSEMBLY ═══ */
+var finalGrp=new THREE.Group();finalGrp.visible=false;scene.add(finalGrp);
+(function(){
+  finalGrp.add(new THREE.Mesh(new THREE.SphereGeometry(.9,20,20),mmat(0xffeedd,.8)));
+  [0x22d3ee,0xa855f7,0xf97316,0x84cc16,0x38bdf8,0xc4a46b,0xf472b6].forEach(function(c,i){
+    var a=(i/7)*Math.PI*2,r=5+Math.random()*2;
+    var s=new THREE.Mesh(new THREE.SphereGeometry(.28,10,10),mmat(c,.8));
+    s.position.set(Math.cos(a)*r,Math.sin(a*.6)*.8,Math.sin(a)*r);
+    s.userData.orbitR=r;s.userData.orbitSpeed=.006;s.userData.orbitPhase=a;s.userData.isSat=true;
+    finalGrp.add(s);
+  });
+})();
+/* ═══ UI STATE ═══ */
+var tCX=0,tCY=0,tCZ=90,tCRX=0,tCRY=0;
+var chIndex=0,chProgress=0,scrollPct=0;
+var navShown=false,wmShown=false,flashed=false;
+var mouseX=0,mouseY=0;
+var orbLabels=[].slice.call(document.querySelectorAll('.orb-label'));
+var chEls=[0,1,2,3,4,5,6].map(function(i){return document.getElementById('cho'+i);});
+var nav=document.getElementById('nav');
+var wm=document.getElementById('amg-wordmark');
+var orbLabelWrap=document.getElementById('orb-labels');
+var spFill=document.getElementById('sp-fill');
+var flash=document.getElementById('amg-flash');
+/* ═══ SERVICE PANEL ═══ */
+var openIdx=-1;
+window.openService=function(i){
+  openIdx=i;document.querySelectorAll('.asp').forEach(function(p){p.classList.remove('open');});
+  document.getElementById('asp'+i).classList.add('open');
+};
+window.closeService=function(){
+  document.querySelectorAll('.asp').forEach(function(p){p.classList.remove('open');});openIdx=-1;
+};
+/* ═══ CURSOR ═══ */
+var cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+var cmx=innerWidth/2,cmy=innerHeight/2,crx=cmx,cry=cmy;var curVis=false;
+document.addEventListener('mousemove',function(e){
+  cmx=e.clientX;cmy=e.clientY;mouseX=(cmx/innerWidth)*2-1;mouseY=-(cmy/innerHeight)*2+1;
+  if(!curVis){curVis=true;cur.style.opacity='1';ring.style.opacity='1';}
+},{passive:true});
+/* ═══ ENTRY ANIMATIONS ═══ */
+setTimeout(function(){
+  var els=['es','eh','esub','ehint'];
+  els.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add('glow');});
+  if(chIndex === 0) document.getElementById('cho0').classList.add('vis');
+},400);
+/* ═══ SCROLL HANDLER ═══ */
+var ticking=false;
+function processScroll(){
+  ticking=false;
+  var maxSc=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+  scrollPct=clamp01(window.scrollY/maxSc);
+  spFill.style.height=(scrollPct*100)+'%';
+  /* Chapter detection */
+  var ci=0;
+  for(var i=0;i<N;i++){if(scrollPct>=CB[i]&&scrollPct<CB[i+1])ci=i;}
+  if(scrollPct>=CB[N])ci=N-1;
+  chIndex=ci;
+  chProgress=(scrollPct-CB[ci])/Math.max(.001,CB[ci+1]-CB[ci]);
+  var cp=clamp01(chProgress);
+  /* Chapter overlays */
+  chEls.forEach(function(el,i){if(el)el.classList.toggle('vis',i===ci&&scrollPct>CB[1]);});
+  /* Entry overlay during ch0 */
+  if(ci===0){
+    document.getElementById('cho0').classList.add('vis');
+    /* fade out entry text as scroll increases */
+    var et=document.getElementById('cho0');
+    if(et)et.style.opacity=String(Math.max(0,1-cp*3));
+  } else {
+    document.getElementById('cho0').classList.remove('vis');
+  }
+  /* Nav */
+  if(scrollPct>CB[1]-.02&&!navShown){navShown=true;nav.classList.add('show');}
+  /* Wordmark: visible only late in ch0, fully gone before ch1 overlays appear.
+     z-index 55 sits above cho (z-index 20) so must disappear first. */
+  var wmOp=0;
+  if(ci===0){
+    if(cp>.50&&cp<.80)wmOp=ss((cp-.50)/.15);        // fade in from 0.50 to 0.65, plateau until 0.80
+    else if(cp>=.80)wmOp=ss(1-((cp-.80)/.20));       // fade out from 0.80 to 1.00
+  }
+  wm.style.opacity=String(clamp01(wmOp));
+  if(wmOp>.05&&!wmShown){wmShown=true;}
+  /* Flash at ch0→ch1 transition */
+  if(scrollPct>CB[1]-.005&&scrollPct<CB[1]+.008&&!flashed){
+    flashed=true;flash.style.opacity='.7';
+    setTimeout(function(){flash.style.transition='opacity .6s';flash.style.opacity='0';},180);
+  }
+  /* Entry particles state */
+  var eScatter=0;
+  if(ci===0){eScatter=ss(Math.min(1,cp*2));eMat.opacity=eScatter*.75;}
+  else if(ci===1){eScatter=1;eMat.opacity=.55;}
+  else if(ci<=2){eScatter=ss(1-clamp01((ci-1)*.5+cp*.3));eMat.opacity=eScatter*.4;}
+  else{eScatter=0;eMat.opacity=0;}
+  /* Update entry particle positions */
+  var pa=eGeo.attributes.position;
+  for(var i=0;i<EPT;i++){
+    var ix=i*3;
+    pa.array[ix]=eSphere[ix]*eScatter;
+    pa.array[ix+1]=eSphere[ix+1]*eScatter;
+    pa.array[ix+2]=eSphere[ix+2]*eScatter;
+  }
+  pa.needsUpdate=true;
+  /* Signal core */
+  sigCore.visible=ci<=1;sigGlow.visible=ci<=1;sigRing.visible=ci<=1;
+  var coreScale=ci===0?(1+Math.sin(clock.getElapsedTime()*2)*.15):1;
+  sigCore.scale.setScalar(clamp01(ci===0?1:Math.max(0,1-cp*3))*coreScale);
+  /* Orbital system */
+  orbGrp.visible=(ci===2||ci===3||(ci===6&&false));
+  var orbOp=ci===2?1:ci===3?Math.max(0,1-cp):0;
+  orbGrp.traverse(function(o){if(o.material){o.material.opacity=clamp01((o.material.opacity||0)*0+(o.userData.baseOp||o.material.opacity)*orbOp);}});
+  orbLabelWrap.classList.toggle('vis',ci===2);
+  /* Archive */
+  archGrp.visible=(ci===3);
+  /* Engine */
+  engGrp.visible=(ci===4);
+  /* Final */
+  finalGrp.visible=(ci===6);
+  /* Camera target */
+  var cs=CW[Math.min(ci,CW.length-1)],cn=CW[Math.min(ci+1,CW.length-1)];
+  var st=ss(cp);
+  tCX=lerp(cs.x,cn.x,st);tCY=lerp(cs.y,cn.y,st);tCZ=lerp(cs.z,cn.z,st);
+  tCRX=lerp(cs.rx,cn.rx,st);tCRY=lerp(cs.ry,cn.ry,st);
+  /* Fog shift */
+  var fogCols=[0x020408,0x020408,0x030810,0x060010,0x030600,0x030508,0x020408,0x030408];
+  scene.fog.color.set(fogCols[ci]||0x020408);renderer.setClearColor(scene.fog.color,1);
+  /* Key light color */
+  var lcs=[0xc4a46b,0xc4a46b,0x6688cc,0x886622,0x88aa44,0x4488cc,0xaa8844,0xc4a46b];
+  kl.color.set(lcs[ci]||0xc4a46b);
+}
+window.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(processScroll);},{passive:true});
+/* ═══ CACHE BASE OPACITIES ═══ */
+orbGrp.traverse(function(o){if(o.material)o.userData.baseOp=o.material.opacity;});
+/* ═══ ANIMATION LOOP ═══ */
+var v3=new THREE.Vector3();
+function animate(){
+  requestAnimationFrame(animate);
+  var t=clock.getElapsedTime();
+  /* Smooth camera */
+  var cx=tCX+mouseX*(.8*(chIndex===1?1:.3));
+  var cy=tCY+mouseY*(.5*(chIndex===1?1:.3));
+  camera.position.x+=(cx-camera.position.x)*.045;
+  camera.position.y+=(cy-camera.position.y)*.045;
+  camera.position.z+=(tCZ-camera.position.z)*.045;
+  camera.rotation.x+=(tCRX-camera.rotation.x)*.038;
+  camera.rotation.y+=(tCRY-camera.rotation.y)*.038;
+  /* Breathing */
+  camera.position.y+=Math.sin(t*.36)*.04;
+  /* Signal pulse */
+  if(sigCore.visible){
+    var ps=.9+Math.sin(t*2.2)*.12;
+    sigCore.scale.setScalar(ps);sigGlow.scale.setScalar(ps*1.4+Math.sin(t*1.4)*.2);
+  }
+  sigRing.rotation.y+=.015;
+  /* Orbital animation */
+  if(orbGrp.visible){
+    orbGrp.rotation.y+=.0015;
+    WD.forEach(function(w,i){
+      orbPhases[i]+=w.spd;
+      var ph=orbPhases[i];
+      var s=orbSpheres[i];
+      s.position.x=Math.cos(ph)*w.r;
+      s.position.y=Math.sin(ph*1.1)*w.r*Math.sin(w.incl);
+      s.position.z=Math.sin(ph)*w.r*Math.cos(w.incl);
+      /* update glow position */
+      var gl=orbGrp.children[i*2+3];if(gl&&gl.userData.glowRef)gl.position.copy(s.position);
+      /* update label position */
+      v3.copy(s.position);v3.applyMatrix4(orbGrp.matrixWorld);v3.project(camera);
+      var lx=(v3.x+1)/2*innerWidth;var ly=(-v3.y+1)/2*innerHeight;
+      var lel=orbLabels[i];if(lel){lel.style.left=lx+'px';lel.style.top=ly+'px';}
+    });
+  }
+  /* Engine spin */
+  if(engGrp.visible){
+    engGrp.traverse(function(o){
+      if(o.userData.spinSpeed)o.rotation[o.userData.spinAxis||'y']+=o.userData.spinSpeed;
+    });
+  }
+  /* Archive pulse */
+  if(archGrp.visible){
+    var am=archGrp.children[0];if(am&&am.material)am.material.opacity=.6+Math.sin(t*1.8)*.2;
+  }
+  /* Final assembly */
+  if(finalGrp.visible){
+    finalGrp.rotation.y+=.003;
+    finalGrp.traverse(function(o){
+      if(o.userData.isSat){
+        o.userData.orbitPhase+=o.userData.orbitSpeed;
+        o.position.x=Math.cos(o.userData.orbitPhase)*o.userData.orbitR;
+        o.position.z=Math.sin(o.userData.orbitPhase)*o.userData.orbitR;
+      }
+    });
+  }
+  /* Cursor */
+  if(curVis){
+    crx+=(cmx-crx)*.1;cry+=(cmy-cry)*.1;
+    cur.style.transform='translate3d('+(cmx-4)+'px,'+(cmy-4)+'px,0)';
+    ring.style.transform='translate3d('+(crx-16)+'px,'+(cry-16)+'px,0)';
+  }
+  renderer.render(scene,camera);
+}
+window.addEventListener('resize',function(){
+  camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+},{passive:true});
+/* ═══ RAYCASTER FOR ORBIT CLICK ═══ */
+canvas.addEventListener('click',function(e){
+  if(chIndex!==2)return;
+  var mouse=new THREE.Vector2(mouseX,mouseY);
+  raycaster.setFromCamera(mouse,camera);
+  var hits=raycaster.intersectObjects(orbSpheres,false);
+  if(hits.length>0){var idx=orbSpheres.indexOf(hits[0].object);if(idx>=0)window.openService(idx);}
+});
+animate();
+processScroll();
+})();
+</script>
+</body>
+</html>
