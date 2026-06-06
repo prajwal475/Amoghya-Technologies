@@ -106,11 +106,25 @@ document.addEventListener('mouseleave', ()=>{
   curLabel.classList.remove('show');
 },{passive:true});
 
-/* ── NAV STICKY ──────────────────────────────── */
+/* ── NAV STICKY & MOBILE MENU ─────────────────── */
 const nav = $('#nav');
 function checkNav(){ nav && nav.classList.toggle('stuck', scrollY>60); }
 window.addEventListener('scroll', checkNav, {passive:true});
 checkNav();
+
+const hamburger = $('.hamburger');
+if (hamburger && nav) {
+  hamburger.addEventListener('click', () => {
+    nav.classList.toggle('mobile-open');
+  });
+  
+  // Close menu when a link is clicked
+  $$('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('mobile-open');
+    });
+  });
+}
 
 /* Set active nav link */
 (function(){
