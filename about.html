@@ -521,6 +521,59 @@
   .dna-row { flex-direction: column !important; gap: 20px !important; text-align: center; }
   .dna-right { text-align: center !important; }
 }
+@media (max-width: 1024px){
+  .ab-hero{min-height:620px}
+  .narrative-panel{padding:0 40px}
+  .np-inner{grid-template-columns:1fr;gap:34px}
+  .np-visual{height:360px;order:-1}
+  .metrics-inner{grid-template-columns:repeat(2,1fr)}
+  .dna-section,.metrics-section,.values-cinema{padding-left:32px;padding-right:32px}
+}
+
+@media (max-width: 700px){
+  .ab-hero{height:86vh;min-height:560px}
+  .ab-hero-content{padding:0 20px}
+  .ab-eyebrow{font-size:8px;letter-spacing:.24em;margin-bottom:22px}
+  .ab-headline{font-size:clamp(34px,12vw,52px);line-height:1.02}
+  .ab-sub{font-size:13px;line-height:1.72}
+  .bigtype-section{padding:42px 0}
+  .bti,.bts{font-size:clamp(42px,16vw,72px)}
+  .narrative-stack{height:100vh;min-height:720px}
+  .narrative-panel{padding:108px 20px 64px;align-items:flex-start}
+  .np-inner{gap:24px}
+  .np-visual{height:260px}
+  .np-num,.np-spine,.np-dots{display:none}
+  .np-label{font-size:8px;letter-spacing:.24em;margin-bottom:12px}
+  .np-title{font-size:clamp(28px,10vw,40px);line-height:1.05}
+  .np-body{font-size:13px;line-height:1.72}
+  .dna-section{padding:80px 20px 92px}
+  .dna-head{margin-bottom:36px}
+  #dna-canvas{height:360px}
+  .metrics-section{padding:72px 20px}
+  .metrics-inner{grid-template-columns:1fr;gap:16px}
+  .met-card{padding:32px 24px}
+  .quote-section,.ending-section{min-height:78vh}
+  .q-rings{width:320px;height:320px}
+  .q-ring:nth-child(1){width:150px;height:150px}
+  .q-ring:nth-child(2){width:235px;height:235px}
+  .q-ring:nth-child(3){width:320px;height:320px}
+  .q-mark{font-size:92px}
+  .q-text{font-size:clamp(25px,9vw,40px)}
+  .values-cinema{padding:84px 20px}
+  .vc-grid{grid-template-columns:1fr;margin-top:40px}
+  .vc-card{min-height:320px;padding:38px 24px}
+  .vc-num{font-size:54px;right:20px}
+  .ending-inner{padding:0 20px}
+  .ending-pre{font-size:8px;letter-spacing:.22em}
+  .ending-text{font-size:clamp(30px,11vw,48px)}
+  .ending-cta{width:100%;max-width:320px;padding:13px 20px}
+}
+
+@media (max-width: 420px){
+  #dna-canvas{height:300px}
+  .np-visual{height:220px}
+  .vc-card{min-height:300px}
+}
 </style>
 </head>
 <body>

@@ -371,6 +371,22 @@ footer{
 @keyframes sbDown{0%{transform:translateY(-100%)}50%{transform:translateY(0)}100%{transform:translateY(200%)}}
 @keyframes mq{to{transform:translate3d(var(--mq-shift,0),0,0)}}
 
+@media (hover:none), (pointer:coarse){
+  body{cursor:auto}
+  #cur,#cur-ring,#cur-label,.cur-trail{display:none!important}
+  a,button,.cc-dot,.arr-btn{cursor:pointer}
+}
+
+@media (max-width: 1024px){
+  footer{padding:46px 32px 34px;grid-template-columns:1fr 1fr;gap:32px}
+  .f-links{grid-column:1/-1;grid-row:2;justify-content:flex-start}
+  .f-copy{grid-row:3}
+  .page-hero{padding:140px 32px 78px}
+  .page-hero-grid{grid-template-columns:1fr;gap:28px}
+  .page-hero-desc{max-width:620px}
+  .pg-nav{left:28px;right:28px;bottom:24px}
+}
+
 /* ── MOBILE RESPONSIVENESS ───────────────────── */
 @media (max-width: 900px) {
   /* Nav */
@@ -462,4 +478,35 @@ footer{
   .ch1-h { font-size: clamp(28px, 9vw, 40px) !important; }
   .ch-h { font-size: clamp(22px, 8vw, 36px) !important; }
   .stat-v { font-size: clamp(28px, 10vw, 40px) !important; }
+}
+
+@media (max-width: 760px){
+  body{font-size:15px}
+  .sec-tag{font-size:9px;letter-spacing:.26em;gap:10px;margin-bottom:18px}
+  .sec-tag::before{width:18px}
+  .sec-h{font-size:clamp(30px,11vw,48px);line-height:1}
+  .btn-pri,.btn-out{width:100%;justify-content:center;padding:13px 18px;font-size:10px;letter-spacing:.14em}
+  .carousel-ctrl{gap:14px;flex-wrap:wrap}
+  .cc-bar{width:86px}
+  .arr-btn{width:46px;height:46px}
+  .page-hero{padding:132px 20px 62px}
+  .page-hero-num{font-size:clamp(84px,30vw,140px);right:12px;bottom:-8px}
+  .page-hero-desc{font-size:14px;line-height:1.72}
+  footer{
+    padding:42px 20px 88px;
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+  }
+  .f-logo,.f-contact,.f-links,.f-copy{width:100%;grid-column:auto;grid-row:auto}
+  .f-links{justify-content:flex-start;flex-wrap:wrap;gap:16px 22px}
+  .f-copy{text-align:left;padding-top:22px}
+  .pg-nav{display:none}
+}
+
+@media (max-width: 520px){
+  #nav,#nav.stuck{padding-left:14px;padding-right:14px}
+  .nav-cta{display:none}
+  .sec-h{font-size:clamp(28px,12vw,42px)}
+  .page-hero{padding-left:16px;padding-right:16px}
 }

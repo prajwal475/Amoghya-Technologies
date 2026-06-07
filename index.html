@@ -159,6 +159,34 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
   .ch1-btns, .final-btns { flex-direction: column !important; gap: 10px !important; align-items: stretch !important; }
   .ch-eyebrow, .ch-concept, .ch-mini { justify-content: center !important; }
 }
+
+@media (hover:none), (pointer:coarse){
+  body{cursor:auto}
+  #cur,#cur-ring{display:none!important}
+}
+
+@media (max-width: 640px){
+  .cho{padding:0 20px}
+  .entry-signal,.ch1-tag,.final-eyebrow{letter-spacing:.28em}
+  .entry-headline{font-size:clamp(30px,10vw,44px)!important}
+  .ch1-h{line-height:.95}
+  .ch1-sub,.final-sub{font-size:13px;max-width:320px}
+  .ch1-btns,.final-btns,.ep-btns{width:100%;max-width:330px;margin-left:auto;margin-right:auto}
+  .btn-p,.btn-o{width:100%;justify-content:center;padding:12px 18px;letter-spacing:.16em;text-align:center}
+  .cho2-inner,.cho3-inner,.cho4-inner,.cho5-inner{top:54%;transform:translateY(-50%);text-align:left!important}
+  #cho3 .ch-concept,#cho3 .ch-h,#cho5 .ch-concept,#cho5 .ch-h,.proj-item{text-align:left!important}
+  .stats-row{justify-content:flex-start!important;gap:28px!important}
+  .proj-item-name{font-size:16px}
+  .orb-label-name{font-size:7px;letter-spacing:.14em}
+  .asp{inset:0;width:100%!important;transform:translateY(100%);border-left:0;border-top:1px solid rgba(240,235,225,.08)}
+  .asp.open{transform:none}
+  .asp-header{padding:16px 18px 12px}
+  .asp-body{padding:28px 20px 52px!important}
+  .asp-name{font-size:clamp(28px,11vw,40px);line-height:1}
+  #sp{width:1px}
+  #amg-footer{padding:38px 20px!important;display:flex;flex-direction:column;align-items:flex-start}
+  .f-links{flex-wrap:wrap}
+}
 </style>
 </head>
 <body>

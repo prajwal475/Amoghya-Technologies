@@ -58,6 +58,24 @@ body{overflow-x:hidden}
   .svc-ch-inner { left: 0 !important; right: 0 !important; transform: none !important; position: relative !important; text-align: center !important; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px 20px; }
   .svc-ch-eyebrow, .svc-ch-concept { justify-content: center; }
 }
+@media (max-width: 640px){
+  #svc-canvas{opacity:.72}
+  #svc-pill{top:104px;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;font-size:8px;letter-spacing:.22em;padding:6px 14px}
+  #svc-overlay{align-items:flex-end}
+  .svc-ch{left:18px;right:18px;bottom:88px;max-width:none}
+  .svc-ch-eyebrow,.svc-ch-concept{font-size:8px;letter-spacing:.26em}
+  .svc-ch-title{font-size:clamp(34px,13vw,50px)!important;line-height:.94;margin-bottom:16px}
+  .svc-ch-narrative{font-size:12.5px;line-height:1.72;margin-bottom:18px;max-width:none}
+  .svc-ch-feats{gap:6px;margin-bottom:22px}
+  .svc-ch-feat{font-size:8px;letter-spacing:.14em;padding:4px 9px}
+  .svc-ch-cta{font-size:9px;letter-spacing:.16em}
+  #svc-dots,#svc-pct{display:none}
+  .svc-hint{bottom:28px}
+  #svc-epilogue{padding:0 20px}
+  .ep-word{font-size:clamp(40px,15vw,68px)!important}
+  .ep-sub{letter-spacing:.24em;line-height:1.6}
+  .ep-btns{width:100%;flex-direction:column;max-width:320px}
+}
 </style>
 </head>
 <body>
