@@ -20,7 +20,10 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
 #nav.show{opacity:1;transform:none}
 .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--fg);text-decoration:none}
 .nav-logo b{color:var(--gold)}
+.hamburger{display:none;background:transparent;border:0;padding:8px;color:var(--fg);cursor:pointer}
+.hamburger svg{width:24px;height:24px;stroke:currentColor;stroke-width:2;stroke-linecap:round;transition:transform .25s}
 .nav-links{display:flex;gap:36px;list-style:none}
+.nav-links .mobile-only{display:none}
 .nav-links a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg2);text-decoration:none;transition:color .2s}
 .nav-links a:hover,.nav-links a.active{color:var(--fg)}
 .nav-cta{font-size:10px;letter-spacing:.24em;text-transform:uppercase;padding:10px 22px;border:1px solid rgba(240,235,225,.18);border-radius:2px;color:var(--fg);text-decoration:none;transition:border-color .2s,background .2s}
@@ -165,11 +168,49 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
   #cur,#cur-ring{display:none!important}
 }
 
+@media (max-width: 900px){
+  #nav{
+    padding:14px 18px;
+    opacity:1;
+    transform:none;
+    background:rgba(2,4,8,.78);
+    border-bottom:1px solid rgba(240,235,225,.07);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+  }
+  .nav-logo{font-size:17px;position:relative;z-index:101}
+  .hamburger{display:flex;align-items:center;justify-content:center;position:relative;z-index:101;margin-left:auto}
+  .nav-links{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:30px;
+    background:rgba(2,4,8,.96);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(-16px);
+    transition:opacity .28s ease,transform .28s ease;
+  }
+  #nav.mobile-open .nav-links{opacity:1;pointer-events:auto;transform:none}
+  #nav.mobile-open .hamburger svg{transform:rotate(90deg)}
+  .nav-links .mobile-only{display:block}
+  .nav-links a{font-size:16px;letter-spacing:.22em;color:rgba(240,235,225,.78)}
+  .nav-cta{display:none}
+}
+
 @media (max-width: 640px){
   .cho{padding:0 20px}
-  .entry-signal,.ch1-tag,.final-eyebrow{letter-spacing:.28em}
-  .entry-headline{font-size:clamp(30px,10vw,44px)!important}
-  .ch1-h{line-height:.95}
+  .entry-signal,.ch1-tag,.final-eyebrow{letter-spacing:.2em}
+  .entry-headline{font-size:clamp(26px,9vw,38px)!important;line-height:1.12}
+  .ch1-tag{font-size:8px;gap:10px;margin-bottom:18px}
+  .ch1-tag::before,.ch1-tag::after{width:16px}
+  .ch1-h{font-size:clamp(28px,10.5vw,38px)!important;line-height:1.02;letter-spacing:0;max-width:min(100%,340px);overflow-wrap:normal}
   .ch1-sub,.final-sub{font-size:13px;max-width:320px}
   .ch1-btns,.final-btns,.ep-btns{width:100%;max-width:330px;margin-left:auto;margin-right:auto}
   .btn-p,.btn-o{width:100%;justify-content:center;padding:12px 18px;letter-spacing:.16em;text-align:center}
@@ -187,6 +228,15 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
   #amg-footer{padding:38px 20px!important;display:flex;flex-direction:column;align-items:flex-start}
   .f-links{flex-wrap:wrap}
 }
+
+@media (max-width: 380px){
+  #nav{padding:12px 14px}
+  .nav-logo{font-size:15px}
+  .cho{padding:0 16px}
+  .ch1-h{font-size:clamp(25px,9.7vw,34px)!important;max-width:300px}
+  .ch1-sub{font-size:12px;line-height:1.65;max-width:280px;margin-bottom:28px}
+  .btn-p,.btn-o{font-size:8px;padding:11px 14px}
+}
 </style>
 </head>
 <body>
@@ -203,6 +253,7 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
     <li><a href="about.html">About</a></li>
     <li><a href="services.html">Services</a></li>
     <li><a href="process.html">Process</a></li>
+    <li class="mobile-only"><a href="contact.html">Contact</a></li>
   </ul>
   <button class="hamburger" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
