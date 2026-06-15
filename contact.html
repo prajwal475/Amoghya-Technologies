@@ -15,7 +15,7 @@
 .ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start}
 @media (max-width: 900px) {
   .ct-grid { grid-template-columns: 1fr; gap: 60px; }
-  .ct-section { padding: 120px 24px 60px; }
+  .ct-section { padding: 100px 24px 60px; min-height: 100vh; display: flex; align-items: center; }
   .ct-h { font-size: clamp(36px, 10vw, 56px) !important; text-align: center; }
   .ct-info { align-items: center; text-align: center; }
 }
@@ -95,7 +95,7 @@
 .fs-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
 .fs-body{font-size:14px;color:var(--fg2);line-height:1.72}
 @media (max-width: 640px){
-  .ct-section{padding:138px 20px 56px}
+  .ct-section{padding:80px 20px 56px;min-height:100vh;display:flex;align-items:center}
   .ct-grid{gap:44px}
   .ct-h{font-size:clamp(28px,8vw,48px);line-height:.94;margin-bottom:30px}
   .ct-info{gap:22px}
