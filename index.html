@@ -147,17 +147,18 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
 
 @media (max-width: 1024px) {
   /* Fix massive fonts on mobile */
-  .amg-wm { font-size: clamp(24px, 10vw, 44px) !important; }
-  .ch1-h { font-size: clamp(28px, 9vw, 40px) !important; }
-  .ch-h { font-size: clamp(22px, 8vw, 36px) !important; }
-  .entry-headline { font-size: clamp(24px, 8vw, 40px) !important; }
-  .final-manifesto { font-size: clamp(20px, 6vw, 32px) !important; }
-  .stat-v { font-size: clamp(28px, 10vw, 40px) !important; }
+  .amg-wm { font-size: clamp(18px, 5.5vw, 32px) !important; }
+  .ch1-h { font-size: clamp(24px, 7vw, 38px) !important; }
+  .ch-h { font-size: clamp(20px, 6.5vw, 36px) !important; }
+  .entry-headline { font-size: clamp(22px, 7vw, 38px) !important; }
+  .final-manifesto { font-size: clamp(18px, 5.5vw, 30px) !important; }
+  .stat-v { font-size: clamp(24px, 7vw, 36px) !important; }
 
   /* Fix side padding/positioning which squeezed content on mobile */
   .cho-left { padding-left: 20px !important; padding-right: 20px !important; text-align: center !important; }
   .cho2-inner, .cho4-inner { left: 20px !important; right: 20px !important; max-width: 100% !important; text-align: center !important; }
   .cho3-inner, .cho5-inner { right: 20px !important; left: 20px !important; max-width: 100% !important; text-align: center !important; }
+  #cho3 .ch-concept, #cho3 .ch-h, #cho5 .ch-concept, #cho5 .ch-h, .proj-item { text-align: center !important; }
   .ch-hint, .ch1-sub, .final-sub { max-width: 100% !important; margin-left: auto; margin-right: auto; }
   .stats-row { justify-content: center !important; gap: 20px !important; }
   .ch1-btns, .final-btns { flex-direction: column !important; gap: 10px !important; align-items: stretch !important; }
@@ -228,17 +229,17 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
 @media (max-width: 640px){
   .cho{padding:0 20px}
   .entry-signal,.ch1-tag,.final-eyebrow{letter-spacing:.2em}
-  .entry-headline{font-size:clamp(26px,9vw,38px)!important;line-height:1.12}
+  .entry-headline{font-size:clamp(22px,7vw,38px)!important;line-height:1.12}
   .ch1-tag{font-size:8px;gap:10px;margin-bottom:18px}
   .ch1-tag::before,.ch1-tag::after{width:16px}
   .ch1-h{font-size:clamp(24px,7vw,38px)!important;line-height:1.02;letter-spacing:0;max-width:min(100%,340px);overflow-wrap:normal}
   .ch1-sub,.final-sub{font-size:13px;max-width:320px}
   .ch1-btns,.final-btns,.ep-btns{width:100%;max-width:330px;margin-left:auto;margin-right:auto}
   .btn-p,.btn-o{width:100%;justify-content:center;padding:12px 18px;letter-spacing:.16em;text-align:center}
-  .cho2-inner,.cho3-inner,.cho4-inner,.cho5-inner{top:54%;transform:translateY(-50%);text-align:left!important}
-  #cho3 .ch-concept,#cho3 .ch-h,#cho5 .ch-concept,#cho5 .ch-h,.proj-item{text-align:left!important}
-  .stats-row{justify-content:flex-start!important;gap:28px!important}
-  .proj-item-name{font-size:16px}
+  .cho2-inner,.cho3-inner,.cho4-inner,.cho5-inner{top:54%;transform:translateY(-50%);text-align:center!important}
+  #cho3 .ch-concept,#cho3 .ch-h,#cho5 .ch-concept,#cho5 .ch-h,.proj-item{text-align:center!important}
+  .stats-row{justify-content:center!important;gap:28px!important}
+  .proj-item-name{font-size:16px;text-align:center}
   .orb-label-name{font-size:7px;letter-spacing:.14em}
   .asp{inset:0;width:100%!important;transform:translateY(100%);border-left:0;border-top:1px solid rgba(240,235,225,.08)}
   .asp.open{transform:none}
