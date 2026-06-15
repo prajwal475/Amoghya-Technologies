@@ -474,7 +474,7 @@ footer{
   body, html { overflow-x: hidden !important; }
 
   /* Fix huge text scaling on index.html for mobile screens */
-  .amg-wm { font-size: clamp(20px, 6.5vw, 36px) !important; line-height: 1.05 !important; }
+  .amg-wm { font-size: clamp(18px, 5.5vw, 32px) !important; line-height: 1.05 !important; }
   .ch1-h { font-size: clamp(24px, 7vw, 38px) !important; line-height: 1.05 !important; }
   .ch-h { font-size: clamp(20px, 6.5vw, 36px) !important; }
   .stat-v { font-size: clamp(28px, 10vw, 40px) !important; }
@@ -492,6 +492,7 @@ footer{
   }
   .svc-ch-eyebrow, .proc-stage-eye { justify-content: center !important; }
   .svc-ch-feats, .proc-panel-list { justify-content: center !important; }
+  .svc-ch-narrative, .proc-stage-hook, .proc-panel-narrative { text-align: center !important; }
 }
 
 @media (max-width: 760px){
