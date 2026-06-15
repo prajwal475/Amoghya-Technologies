@@ -11,7 +11,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--fg:#f0ebe1;--fg2:rgba(240,235,225,.52);--gold:#c4a46b;--bg:#020408;--bdr:rgba(240,235,225,.07);font-family:'Space Grotesk',sans-serif}
 html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
-#amg-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+#amg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
 #amg-scroll{height:900vh;position:relative;pointer-events:none}
 /* ── FLASH ── */
 #amg-flash{position:fixed;inset:0;z-index:60;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -199,12 +199,12 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
     backdrop-filter:blur(22px);
     -webkit-backdrop-filter:blur(22px);
     opacity:0;
-    visibility:hidden; display:none;
+    visibility:hidden;
     pointer-events:none;
     transform:translateY(-14px) scale(.985);
     transition:opacity .28s ease,visibility .28s ease,transform .28s ease;
   }
-  #nav.mobile-open .nav-links{display:flex; opacity:1;visibility:visible;pointer-events:auto;transform:none}
+  #nav.mobile-open .nav-links{opacity:1;visibility:visible;pointer-events:auto;transform:none}
   #nav.mobile-open .hamburger span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
   #nav.mobile-open .hamburger span:nth-child(2){opacity:0}
   #nav.mobile-open .hamburger span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
@@ -232,7 +232,7 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
   .entry-headline{font-size:clamp(22px,7vw,38px)!important;line-height:1.12}
   .ch1-tag{font-size:8px;gap:10px;margin-bottom:18px}
   .ch1-tag::before,.ch1-tag::after{width:16px}
-  .ch1-h{font-size:clamp(24px,7vw,38px)!important;line-height:1.02;letter-spacing:0;max-width:min(100%,340px);overflow-wrap:normal}
+  .ch1-h{font-size:clamp(24px,7vw,38px)!important;line-height:1.02;letter-spacing:0;max-width:min(100%,340px);margin:0 auto;overflow-wrap:normal}
   .ch1-sub,.final-sub{font-size:13px;max-width:320px}
   .ch1-btns,.final-btns,.ep-btns{width:100%;max-width:330px;margin-left:auto;margin-right:auto}
   .btn-p,.btn-o{width:100%;justify-content:center;padding:12px 18px;letter-spacing:.16em;text-align:center}
@@ -255,7 +255,7 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
   #nav{padding:12px 14px}
   .nav-logo{font-size:15px}
   .cho{padding:0 16px}
-  .ch1-h{font-size:clamp(22px,6.5vw,34px)!important;max-width:300px}
+  .ch1-h{font-size:clamp(22px,6.5vw,34px)!important;max-width:300px;margin:0 auto}
   .ch1-sub{font-size:12px;line-height:1.65;max-width:280px;margin-bottom:28px}
   .btn-p,.btn-o{font-size:8px;padding:11px 14px}
 }
