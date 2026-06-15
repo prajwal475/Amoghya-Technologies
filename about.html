@@ -92,13 +92,13 @@
   font-family:'Syne',sans-serif;
   font-size:clamp(52px,8.5vw,114px);
   font-weight:800;letter-spacing:-.03em;
-  color:transparent;
-  -webkit-text-stroke:1px rgba(240,235,225,.13);
+  color:rgba(240,235,225,0.1);
+  -webkit-text-stroke:1.5px rgba(240,235,225,.8);
   padding:0 36px;flex-shrink:0;
   transition:-webkit-text-stroke-color .35s,color .35s;
   cursor:default;
 }
-.bti:hover{color:var(--fg);-webkit-text-stroke-color:transparent}
+.bti:hover{color:var(--fg);-webkit-text-stroke-color:rgba(240,235,225,0.1)}
 .bts{
   font-family:'Syne',sans-serif;
   font-size:clamp(52px,8.5vw,114px);
@@ -127,7 +127,7 @@
   font-family:'Syne',sans-serif;
   font-size:clamp(90px,13vw,170px);
   font-weight:800;line-height:1;
-  color:transparent;
+  color:rgba(240,235,225,0.1);
   letter-spacing:-.04em;user-select:none;
 }
 .np-label{
@@ -308,7 +308,7 @@
 .vc-num{
   position:absolute;top:20px;right:28px;
   font-family:'Syne',sans-serif;font-size:72px;font-weight:800;
-  color:transparent;letter-spacing:-.04em;
+  color:rgba(240,235,225,0.1);letter-spacing:-.04em;
   line-height:1;user-select:none;
 }
 .vc-title{
@@ -319,10 +319,10 @@
   font-size:13px;color:var(--fg2);line-height:1.82;
   max-width:380px;position:relative;
 }
-.vc-card:nth-child(1) .vc-num{-webkit-text-stroke:1px rgba(0,217,255,.12)}
-.vc-card:nth-child(2) .vc-num{-webkit-text-stroke:1px rgba(168,85,247,.12)}
-.vc-card:nth-child(3) .vc-num{-webkit-text-stroke:1px rgba(196,164,107,.12)}
-.vc-card:nth-child(4) .vc-num{-webkit-text-stroke:1px rgba(74,222,128,.12)}
+.vc-card:nth-child(1) .vc-num{-webkit-text-stroke:2px rgba(0,217,255,.8)}
+.vc-card:nth-child(2) .vc-num{-webkit-text-stroke:2px rgba(168,85,247,.8)}
+.vc-card:nth-child(3) .vc-num{-webkit-text-stroke:2px rgba(196,164,107,.8)}
+.vc-card:nth-child(4) .vc-num{-webkit-text-stroke:2px rgba(74,222,128,.8)}
 .vc-card:nth-child(1){--gc:rgba(0,217,255,.06)}
 .vc-card:nth-child(2){--gc:rgba(168,85,247,.06)}
 .vc-card:nth-child(3){--gc:rgba(196,164,107,.06)}
@@ -438,7 +438,7 @@
   position:absolute;bottom:14px;right:18px;
   font-family:'Syne',sans-serif;
   font-size:72px;font-weight:800;
-  color:transparent;letter-spacing:-.04em;line-height:1;
+  color:rgba(240,235,225,0.1);letter-spacing:-.04em;line-height:1;
   pointer-events:none;z-index:2;
 }
 .np-vis-border{
@@ -661,7 +661,7 @@
         </div>
         <div class="np-visual" style="--np-rgb:0,217,255">
         <img class="np-vis-img" src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Vision">
-        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(0,217,255,.35)">01</div>
+        <div class="np-vis-num" style="-webkit-text-stroke:2px rgba(0,217,255,.9)">01</div>
         <div class="np-vis-border"></div>
       </div>
       </div>
@@ -677,7 +677,7 @@
         </div>
         <div class="np-visual" style="--np-rgb:168,85,247">
         <img class="np-vis-img" src="https://images.pexels.com/photos/6491965/pexels-photo-6491965.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Innovation">
-        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(168,85,247,.35)">02</div>
+        <div class="np-vis-num" style="-webkit-text-stroke:2px rgba(168,85,247,.9)">02</div>
         <div class="np-vis-border"></div>
       </div>
       </div>
@@ -693,7 +693,7 @@
         </div>
         <div class="np-visual" style="--np-rgb:196,164,107">
         <img class="np-vis-img" src="https://images.pexels.com/photos/8108682/pexels-photo-8108682.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Design">
-        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(196,164,107,.35)">03</div>
+        <div class="np-vis-num" style="-webkit-text-stroke:2px rgba(196,164,107,.9)">03</div>
         <div class="np-vis-border"></div>
       </div>
       </div>
@@ -709,7 +709,7 @@
         </div>
         <div class="np-visual" style="--np-rgb:74,222,128">
         <img class="np-vis-img" src="https://images.pexels.com/photos/12081657/pexels-photo-12081657.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Technology">
-        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(74,222,128,.35)">04</div>
+        <div class="np-vis-num" style="-webkit-text-stroke:2px rgba(74,222,128,.9)">04</div>
         <div class="np-vis-border"></div>
       </div>
       </div>
@@ -725,7 +725,7 @@
         </div>
         <div class="np-visual" style="--np-rgb:0,217,255">
         <img class="np-vis-img" src="https://images.pexels.com/photos/8134609/pexels-photo-8134609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Future">
-        <div class="np-vis-num" style="-webkit-text-stroke:1px rgba(0,217,255,.35)">05</div>
+        <div class="np-vis-num" style="-webkit-text-stroke:2px rgba(0,217,255,.9)">05</div>
         <div class="np-vis-border"></div>
       </div>
       </div>
@@ -1633,3 +1633,4 @@ document.querySelectorAll('.rv,.rv-clip,.rv-r').forEach(function(el){
 </script>
 </body>
 </html>
+

@@ -185,7 +185,7 @@ footer{
   font-family:'Syne',sans-serif;font-size:clamp(36px,5.2vw,80px);
   font-weight:800;line-height:.92;letter-spacing:-.022em;text-transform:uppercase;
 }
-.sec-h .ghost{-webkit-text-stroke:1px rgba(240,235,225,.18);color:transparent}
+.sec-h .ghost{-webkit-text-stroke:1.5px rgba(240,235,225,.8);color:rgba(240,235,225,0.1)}
 
 /* ── BUTTONS ─────────────────────────────────── */
 .btn-pri{
@@ -261,7 +261,7 @@ footer{
 .page-hero-num{
   font-family:'Syne',sans-serif;font-size:clamp(120px,18vw,220px);
   font-weight:800;line-height:1;letter-spacing:-.04em;
-  -webkit-text-stroke:1px rgba(240,235,225,.06);color:transparent;
+  -webkit-text-stroke:2px rgba(240,235,225,.5);color:rgba(240,235,225,0.1);
   position:absolute;right:40px;bottom:-20px;pointer-events:none;
   user-select:none;
 }
@@ -307,8 +307,8 @@ footer{
 }
 
 /* ── GRADIENT TEXT ───────────────────────────── */
-.grad-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.grad-cyan{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:rgba(240,235,225,0.1);background-clip:text}
+.grad-cyan{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:rgba(240,235,225,0.1);background-clip:text}
 
 /* ── BRIGHT ICON RINGS ───────────────────────── */
 .icon-cyan{border-color:rgba(0,217,255,.25)!important}
@@ -510,3 +510,4 @@ footer{
   .sec-h{font-size:clamp(28px,12vw,42px)}
   .page-hero{padding-left:16px;padding-right:16px}
 }
+
