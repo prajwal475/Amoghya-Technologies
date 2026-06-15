@@ -145,7 +145,7 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
 .f-contact p, .f-contact a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg2);text-decoration:none;transition:color .2s;line-height:1.7}
 .f-contact a:hover{color:var(--fg)}
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   /* Fix massive fonts on mobile */
   .amg-wm { font-size: clamp(24px, 10vw, 44px) !important; }
   .ch1-h { font-size: clamp(28px, 9vw, 40px) !important; }
@@ -169,7 +169,7 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
   #cur,#cur-ring{display:none!important}
 }
 
-@media (max-width: 900px){
+@media (max-width: 1024px){
   #nav{
     padding:14px 18px;
     opacity:1;
@@ -198,12 +198,12 @@ html,body{width:100%;background:var(--bg);color:var(--fg);overflow-x:hidden}
     backdrop-filter:blur(22px);
     -webkit-backdrop-filter:blur(22px);
     opacity:0;
-    visibility:hidden;
+    visibility:hidden; display:none;
     pointer-events:none;
     transform:translateY(-14px) scale(.985);
     transition:opacity .28s ease,visibility .28s ease,transform .28s ease;
   }
-  #nav.mobile-open .nav-links{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+  #nav.mobile-open .nav-links{display:flex; opacity:1;visibility:visible;pointer-events:auto;transform:none}
   #nav.mobile-open .hamburger span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
   #nav.mobile-open .hamburger span:nth-child(2){opacity:0}
   #nav.mobile-open .hamburger span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
@@ -789,4 +789,5 @@ processScroll();
 </script>
 </body>
 </html>
+
 
