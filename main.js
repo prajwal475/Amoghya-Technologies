@@ -128,10 +128,13 @@ if (hamburger && nav) {
 
 /* Set active nav link */
 (function(){
-  const path = location.pathname.split('/').pop() || 'index.html';
+  let path = location.pathname;
+  if (path.endsWith('/') && path.length > 1) path = path.slice(0, -1);
   $$('#nav .nav-links a').forEach(a=>{
     const href = a.getAttribute('href');
-    if(href === path || (path === '' && href === 'index.html')) a.classList.add('active');
+    if (path === href || (path === '/' && href === '/') || path.endsWith(href) || path.endsWith(href + '.html') || (path.endsWith('index.html') && href === '/')) {
+      a.classList.add('active');
+    }
   });
 })();
 

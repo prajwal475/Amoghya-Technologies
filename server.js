@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json()); // Parse JSON bodies
-app.use(express.static(__dirname)); // Serve static files from current directory
+app.use(express.static(__dirname, { extensions: ['html'] })); // Serve static files from current directory
 
 // Configure Nodemailer transporter
 const transporter = nodemailer.createTransport({
